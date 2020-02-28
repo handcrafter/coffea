@@ -10,7 +10,7 @@ public class BinaryTreeTest {
          *  Traverse through the tree using getLeft/RightNode();
          *  Insert child node using setLeft/RightNode()
          *  Searching requires to travel all nodes in the tree since it is not sorted in any order, and because so, the running time would be O(n)
-         *  As long as the a node is not null, there are no limit on height of the tree
+         *  As long as the node is not null, there are no limit on height of the tree
          *
          *  Below example tree has depth of 3
          *         0
