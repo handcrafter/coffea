@@ -15,11 +15,10 @@ public class BinaryTree<T> extends Tree {
         current = null;
     }
 
-
     // Constructors
     BinaryTree(T key) {
         root = new BinaryNode<T>(key);
-        current = root;
+        current = new BinaryNode<T>(key);
     }
 
     public void setLeftChild(T key) {
@@ -28,7 +27,8 @@ public class BinaryTree<T> extends Tree {
             node = new BinaryNode<T>();
         }
         node.setKey(key);
-        root.setLeftNode(node);
+        node.setParentNode(current);
+        current.setLeftNode(node);
     }
 
     public void setRightChild(T key) {
@@ -37,7 +37,8 @@ public class BinaryTree<T> extends Tree {
             node = new BinaryNode<T>();
         }
         node.setKey(key);
-        root.setRightNode(node);
+        node.setParentNode(current);
+        current.setRightNode(node);
     }
 
     public void moveToLeftNode() {
@@ -46,6 +47,10 @@ public class BinaryTree<T> extends Tree {
 
     public void moveToRightNode() {
         current = current.getRightNode();
+    }
+
+    public void moveToParentNode() {
+        current = current.getParentNode();
     }
 
     @Override
@@ -73,15 +78,14 @@ public class BinaryTree<T> extends Tree {
     @Override
     public void printBFS() {
         Queue<BinaryNode<T>> queue = new LinkedList<BinaryNode<T>>() ;
-        if (root == null)
-            return;
-        queue.clear();
-        queue.add(root);
-        while(!queue.isEmpty()){
+        if (current == null) return;
+
+        queue.add(current);
+        while (!queue.isEmpty()) {
             BinaryNode<T> node = queue.remove();
             node.print();
-            if(node.getLeftNode() != null) queue.add(node.getLeftNode());
-            if(node.getRightNode() != null) queue.add(node.getRightNode());
+            if (node.getLeftNode() != null) queue.add(node.getLeftNode());
+            if (node.getRightNode() != null) queue.add(node.getRightNode());
         }
     }
 }
