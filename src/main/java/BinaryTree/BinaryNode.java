@@ -2,6 +2,7 @@ package BinaryTree;
 
 import Base.Node;
 
+
 public class BinaryNode<T> extends Node {
     private T key;
     private BinaryNode<T> left, right;
@@ -30,17 +31,15 @@ public class BinaryNode<T> extends Node {
         right = node;
     }
 
-    BinaryNode<T> getLeftNode() {
-        return left;
-    }
+    T getKey() { return key; }
 
-    BinaryNode<T> getRightNode() {
-        return right;
-    }
+    BinaryNode<T> getLeftNode() { return left; }
+
+    BinaryNode<T> getRightNode() { return right; }
 
     @Override
     public void print() {
-        System.out.print(key);
+        System.out.print(key + " ");
     }
 
 }
