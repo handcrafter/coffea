@@ -1,16 +1,14 @@
 # coffea
 
-<<<<<<< HEAD
-The goal is to implement every tree in [this Wikipedia List](https://en.wikipedia.org/wiki/List_of_data_structures#Trees)
-=======
+
 The goal is to implement every tree in [this Wikipedia ist](https://en.wikipedia.org/wiki/List_of_data_structures#Trees)
 
 ## Implemented
+- Binary Tree
 
 ## To be implemented
 
 ### Binary Tree
-- Binary Tree
 - Binary Search Tree
 - Self-balancing Binary Search Tree
 - Cartesian Tree
@@ -33,4 +31,4 @@ The goal is to implement every tree in [this Wikipedia ist](https://en.wikipedia
 ### Space-partitioning Trees
 - Range Tree
 - K-d Tree
->>>>>>> d03d0f47cd0670b6f9a9de2178c276c76c1e3e55
+
