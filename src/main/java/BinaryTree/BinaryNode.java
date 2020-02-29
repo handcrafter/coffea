@@ -2,20 +2,21 @@ package BinaryTree;
 
 import Base.Node;
 
+
 public class BinaryNode<T> extends Node {
     private T key;
-    private BinaryNode<T> left, right;
+    private BinaryNode<T> parent, left, right;
 
     BinaryNode(T item)
     {
         key = item;
-        left = right = null;
+        parent = left = right = null;
     }
 
     BinaryNode()
     {
         key = null;
-        left = right = null;
+        parent = left = right = null;
     }
 
     void setKey(T item) {
@@ -30,13 +31,15 @@ public class BinaryNode<T> extends Node {
         right = node;
     }
 
-    BinaryNode<T> getLeftNode() {
-        return left;
-    }
+    void setParentNode(BinaryNode<T> node) { parent = node; };
 
-    BinaryNode<T> getRightNode() {
-        return right;
-    }
+    T getKey() { return key; }
+
+    BinaryNode<T> getLeftNode() { return left; }
+
+    BinaryNode<T> getRightNode() { return right; }
+
+    BinaryNode<T> getParentNode() { return parent; }
 
     @Override
     public void print() {
