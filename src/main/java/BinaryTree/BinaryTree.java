@@ -1,9 +1,9 @@
 package BinaryTree;
 
 import Base.Tree;
-
 import java.util.LinkedList;
 import java.util.Queue;
+
 
 public class BinaryTree<T> extends Tree {
 
@@ -55,24 +55,24 @@ public class BinaryTree<T> extends Tree {
 
     @Override
     public void printDFS() {
+        BinaryNode<T> original_position = current;
         if (current == null) return;
 
         current.print();
 
-        BinaryNode hold = current;
         if (current.getLeftNode() != null) {
             moveToLeftNode();
             printDFS();
-            current = hold;
+            moveToParentNode();
         }
 
-        hold = current;
         if (current.getRightNode() != null) {
             moveToRightNode();
             printDFS();
-            current = hold;
+            moveToParentNode();
         }
 
+        current = original_position;
     }
 
     @Override

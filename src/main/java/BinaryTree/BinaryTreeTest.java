@@ -1,16 +1,18 @@
 package BinaryTree;
 
+
 public class BinaryTreeTest {
 
     public static void main(String[] args) {
 
         /*
          *  Binary Tree
-         *  Tree data structure with at most 2 children per a parent node
-         *  Traverse through the tree using getLeft/RightNode();
-         *  Insert child node using setLeft/RightNode()
-         *  Searching requires to travel all nodes in the tree since it is not sorted in any order, and because so, the running time would be O(n)
-         *  As long as the node is not null, there are no limit on height of the tree
+         *  - Tree data structure with at most 2 children per a parent node
+         *  - Traverse through the tree using moveToLeft/RightNode();
+         *  - Insert child node using setLeft/RightNode()
+         *  - Since the tree is not sorted in any order, the searching will take O(N) times
+         *  - Minimum height: log2(N)+1
+         *  - Maximum height: O(N)
          *
          *  Below example tree has depth of 3
          *         0
