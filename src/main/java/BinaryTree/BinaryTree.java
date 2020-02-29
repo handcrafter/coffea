@@ -7,17 +7,14 @@ import java.util.Queue;
 
 public class BinaryTree<T> extends Tree {
 
-    BinaryNode<T> root;
     BinaryNode<T> current;
 
     BinaryTree() {
-        root = null;
         current = null;
     }
 
     // Constructors
     BinaryTree(T key) {
-        root = new BinaryNode<T>(key);
         current = new BinaryNode<T>(key);
     }
 
