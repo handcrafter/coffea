@@ -9,10 +9,10 @@ public class BinarySearchTreeTest {
         /*
         *   BinarySearchTree(BST)
         *
-        *   - BST is a binary trees that keeps their keys in sorted order.
-        *   - SearchKey method returns true if a node in tree contains the target key value
-        *   - DeleteNode removes target node from the tree
-        *   - InsertNode inserts a new node into the tree depending on the new node's key
+        *   - BST is a binary trees that keeps the keys in sorted order.
+        *   - contains method returns true if a node in tree contains the target key value
+        *   - Delete method removes target node from the tree
+        *   - Insert method inserts a new node into the tree depending on the new node's key
         *   - (left : key < root, right : key > root)
         *
         *   Minimum height : O(logN)
@@ -33,29 +33,35 @@ public class BinarySearchTreeTest {
         *
         *   program output:
         *   52713694
-        *   Is 4 in the tree? : true
-        *   Remove 9 from the tree
-        *   5271364
+        *   Is 7 in the tree? : true
+        *   Remove 2 from the tree
+        *   5371469
+        *   Inorder :
+        *   1345679
         */
 
         BinarySearchTree bsTree = new BinarySearchTree(5);
         // Insert a node
-        bsTree.insertNode(new BinaryNode(2));
-        bsTree.insertNode(new BinaryNode(1));
-        bsTree.insertNode(new BinaryNode(7));
-        bsTree.insertNode(new BinaryNode(3));
-        bsTree.insertNode(new BinaryNode(4));
-        bsTree.insertNode(new BinaryNode(9));
-        bsTree.insertNode(new BinaryNode(6));
+        bsTree.insert(2);
+        bsTree.insert(1);
+        bsTree.insert(7);
+        bsTree.insert(3);
+        bsTree.insert(4);
+        bsTree.insert(9);
+        bsTree.insert(6);
         bsTree.printBFS();
 
         // Search for key
-        System.out.println("\n" + "Is 4 in the tree? : " + bsTree.searchKey(4));
+        System.out.println("\n" + "Is 7 in the tree? : " + bsTree.contains(7));
 
         // Remove a node
-        System.out.println("Remove 9 from the tree");
-        bsTree.deleteNode(new BinaryNode(9));
+        System.out.println("Remove 2 from the tree");
+        bsTree.delete(2);
         bsTree.printBFS();
+
+        //print tree in order
+        System.out.println("\n" + "Inorder : ");
+        bsTree.printInorder();
     }
 
 }
