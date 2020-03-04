@@ -4,24 +4,29 @@ import Base.Node;
 
 
 public class BinaryNode<T> extends Node {
-    private T key;
+    private T value;
+    private int key;
     private BinaryNode<T> parent, left, right;
 
-    BinaryNode(T item)
+    BinaryNode(int item, T value)
     {
         key = item;
+        this.value = value;
         parent = left = right = null;
     }
 
     BinaryNode()
     {
-        key = null;
+        key = 0;
+        value = null;
         parent = left = right = null;
     }
 
-    void setKey(T item) {
+    void setKey(int item) {
         key = item;
     }
+
+    void setValue(T value) { this.value = value; }
 
     void setLeftNode(BinaryNode<T> node) {
         left = node;
@@ -33,7 +38,9 @@ public class BinaryNode<T> extends Node {
 
     void setParentNode(BinaryNode<T> node) { parent = node; };
 
-    T getKey() { return key; }
+    int getKey() { return key; }
+
+    T getValue() { return value; }
 
     BinaryNode<T> getLeftNode() { return left; }
 

@@ -26,16 +26,16 @@ public class BinaryTreeTest {
          */
 
 
-        BinaryTree bt = new BinaryTree(0);
-        bt.setLeftChild(1);
-        bt.setRightChild(2);
+        BinaryTree bt = new BinaryTree(1, null);
+        bt.setLeftChild(2);
+        bt.setRightChild(3);
         bt.moveToLeftNode();
-        bt.setLeftChild(3);
-        bt.setRightChild(4);
+        bt.setLeftChild(4);
+        bt.setRightChild(5);
         bt.moveToParentNode();
         bt.moveToRightNode();
-        bt.setLeftChild(5);
-        bt.setRightChild(6);
+        bt.setLeftChild(6);
+        bt.setRightChild(7);
         bt.moveToParentNode();
 
         System.out.print("BFS : ");
