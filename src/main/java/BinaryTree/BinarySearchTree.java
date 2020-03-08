@@ -21,22 +21,24 @@ public class BinarySearchTree<T> extends Tree {
 
 
     // Setters
-    public void setLeftChild(int key) {
+    public void setLeftChild(int key, T value) {
         BinaryNode<T> node = current.getLeftNode();
         if (node == null) {
             node = new BinaryNode<T>();
         }
         node.setKey(key);
+        node.setValue(value);
         node.setParentNode(current);
         current.setLeftNode(node);
     }
 
-    public void setRightChild(int key) {
+    public void setRightChild(int key, T value) {
         BinaryNode<T> node = current.getRightNode();
         if (node == null) {
             node = new BinaryNode<T>();
         }
         node.setKey(key);
+        node.setValue(value);
         node.setParentNode(current);
         current.setRightNode(node);
     }
@@ -72,14 +74,14 @@ public class BinarySearchTree<T> extends Tree {
 
         if (current.getKey() < insert_key) {
             if (current.getRightNode() == null) {
-                setRightChild(node.getKey());
+                setRightChild(node.getKey(), value);
             } else {
                 moveToRightNode();
                 insert(insert_key, value);
             }
         } else if (current.getKey() > insert_key) {
             if (current.getLeftNode() == null) {
-                setLeftChild(node.getKey());
+                setLeftChild(node.getKey(), value);
             } else {
                 moveToLeftNode();
                 insert(insert_key, value);
@@ -91,7 +93,6 @@ public class BinarySearchTree<T> extends Tree {
     // Deletion
     public void delete(int delete_key) {
         BinaryNode<T> original_position = current;
-
 
         if (delete_key == 0) return;
 
@@ -213,5 +214,4 @@ public class BinarySearchTree<T> extends Tree {
             if (node.getRightNode() != null) queue.add(node.getRightNode());
         }
     }
-
 }
