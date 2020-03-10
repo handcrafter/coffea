@@ -13,7 +13,7 @@ public class AVLtreeTest {
         * - Deletion : O(logN)
         * - Insertion : O(logN)
         *
-        * Example:
+        * Example :
         *       Binary Tree                                 AVLtree
         *
         *           10                                         30
@@ -25,6 +25,13 @@ public class AVLtreeTest {
         *                   40
         *                    \
         *                     50
+        *
+        * Second Example :
+        *         Binary Tree                                   AVLtree
+        *             5                                             3
+        *          3     7                                        2    5
+        *        2                                             1          7
+        *      1
         */
 
         AVLtree a = new AVLtree(10, null);
@@ -35,9 +42,12 @@ public class AVLtreeTest {
         a.insert(25, null);
         a.printBFS();
 
-        a.delete(40);
-        a.delete(50);
-        System.out.println(a.contains(20));
-        a.printBFS();
+        System.out.println("\n"+"Second example :");
+        AVLtree b = new AVLtree(5, null);
+        b.insert(3, null);
+        b.insert(2, null);
+        b.insert(7, null);
+        b.insert(1, null);
+        b.printBFS();
     }
 }

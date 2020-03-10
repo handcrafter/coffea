@@ -19,7 +19,6 @@ public class BinaryNode<T> extends Node {
 
     BinaryNode()
     {
-        key = 0;
         height = 0;
         value = null;
         parent = left = right = null;

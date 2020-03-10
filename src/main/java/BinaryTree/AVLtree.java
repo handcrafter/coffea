@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 
-public class AVLtree<T> extends Tree{
+public class AVLtree<T> extends Tree {
     BinaryNode<T> current;
 
     AVLtree() { current = null; }
@@ -46,9 +46,9 @@ public class AVLtree<T> extends Tree{
         if (node.getLeftNode() == null && node.getRightNode() == null) {
             node.setHeight(0);
         } else if (node.getLeftNode() == null && node.getRightNode() != null) {
-            node.setHeight(1+node.getRightNode().getHeight());
+            node.setHeight(1 + node.getRightNode().getHeight());
         } else if (node.getLeftNode() != null && node.getRightNode() == null) {
-            node.setHeight(1+current.getLeftNode().getHeight());
+            node.setHeight(1 + current.getLeftNode().getHeight());
         } else {
             node.setHeight(1 + Math.max(node.getLeftNode().getHeight(), node.getRightNode().getHeight()));
         }
@@ -56,9 +56,9 @@ public class AVLtree<T> extends Tree{
 
     public int getDepthDifference(BinaryNode<T> target) {
         if (target.getLeftNode() == null && target.getRightNode() != null) {
-            return (-1)-target.getRightNode().getHeight();
+            return -target.getRightNode().getHeight() - 1;
         } else if (target.getLeftNode() != null && target.getRightNode() == null) {
-            return target.getLeftNode().getHeight()+1;
+            return target.getLeftNode().getHeight() + 1;
         } else {
             return target.getLeftNode().getHeight() - target.getRightNode().getHeight();
         }
@@ -113,7 +113,7 @@ public class AVLtree<T> extends Tree{
     }
 
     public void bst_delete(int delete_key) {
-        if (delete_key == 0 || current == null) return;
+        if (current == null) return;
 
         if (current.getKey() < delete_key) {
             if (current.getRightNode() != null) {
@@ -128,7 +128,6 @@ public class AVLtree<T> extends Tree{
             bst_delete(delete_key);
             moveToParentNode();
         } else if (current.getKey() == delete_key) {
-
             // Deleting a node with no children
             if (current.getLeftNode() == null && current.getRightNode() == null) {
                 if (current.getParentNode().getKey() < current.getKey()) {
@@ -136,7 +135,6 @@ public class AVLtree<T> extends Tree{
                 } else {
                     current.getParentNode().setLeftNode(null);
                 }
-
             }
             // Deleting a node with one child
             else if (current.getLeftNode() == null && current.getRightNode() != null) {
@@ -212,47 +210,45 @@ public class AVLtree<T> extends Tree{
 
     public void rightRotation() {
         BinaryNode<T> newRoot = current.getLeftNode();
-        BinaryNode<T> moveSubtreeToRight = new BinaryNode<T>();
 
         if (newRoot.getRightNode() != null) {
-            moveSubtreeToRight = newRoot.getRightNode();
+            current.setLeftNode(newRoot.getRightNode());
+        } else {
+            current.setLeftNode(null);
         }
 
         newRoot.setRightNode(current);
         newRoot.setParentNode(current.getParentNode());
         current.setParentNode(newRoot);
-        current.setLeftNode(moveSubtreeToRight);
 
-        if (moveSubtreeToRight != null) {
-            moveSubtreeToRight.setParentNode(current);
+        if (current.getLeftNode() != null) {
+            current.getLeftNode().setParentNode(current);
         }
 
         updateHeight(current);
         updateHeight(newRoot);
-
         current = newRoot;
     }
 
     public void leftRotation() {
         BinaryNode<T> newRoot = current.getRightNode();
-        BinaryNode<T> moveSubtreeToLeft = newRoot.getLeftNode();
 
         if (newRoot.getLeftNode() != null) {
-            moveSubtreeToLeft = newRoot.getLeftNode();
+            current.setRightNode(newRoot.getLeftNode());
+        } else {
+            current.setRightNode(null);
         }
 
         newRoot.setLeftNode(current);
         newRoot.setParentNode(current.getParentNode());
         current.setParentNode(newRoot);
-        current.setRightNode(moveSubtreeToLeft);
 
-        if (moveSubtreeToLeft != null) {
-            moveSubtreeToLeft.setParentNode(current);
+        if (current.getRightNode() != null) {
+            current.getRightNode().setParentNode(current);
         }
 
         updateHeight(current);
         updateHeight(newRoot);
-
         current = newRoot;
     }
 
