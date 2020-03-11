@@ -116,14 +116,12 @@ public class AVLtree<T> extends Tree {
         if (current == null) return;
 
         if (current.getKey() < delete_key) {
-            if (current.getRightNode() != null) {
-                moveToRightNode();
-                bst_delete(delete_key);
-                moveToParentNode();
-            } else {
-                return;
-            }
+            if (current.getRightNode() == null) return;
+            moveToRightNode();
+            bst_delete(delete_key);
+            moveToParentNode();
         } else if (current.getKey() > delete_key) {
+            if (current.getLeftNode() == null) return;
             moveToLeftNode();
             bst_delete(delete_key);
             moveToParentNode();
@@ -155,7 +153,7 @@ public class AVLtree<T> extends Tree {
                     current.getLeftNode().setParentNode(null);
                     current = current.getLeftNode();
                 } else {
-                    if (current.getParentNode().getKey() < current.getRightNode().getKey()) {
+                    if (current.getParentNode().getKey() < current.getLeftNode().getKey()) {
                         current.getParentNode().setRightNode(current.getLeftNode());
                         current.getLeftNode().setParentNode(current.getParentNode());
                     } else {
@@ -217,6 +215,14 @@ public class AVLtree<T> extends Tree {
             current.setLeftNode(null);
         }
 
+        if (current.getParentNode() != null) {
+            if (current == current.getParentNode().getLeftNode()) {
+                current.getParentNode().setLeftNode(newRoot);
+            } else {
+                current.getParentNode().setRightNode(newRoot);
+            }
+        }
+
         newRoot.setRightNode(current);
         newRoot.setParentNode(current.getParentNode());
         current.setParentNode(newRoot);
@@ -239,6 +245,13 @@ public class AVLtree<T> extends Tree {
             current.setRightNode(null);
         }
 
+        if (current.getParentNode() != null) {
+            if (current == current.getParentNode().getLeftNode()) {
+                current.getParentNode().setLeftNode(newRoot);
+            } else {
+                current.getParentNode().setRightNode(newRoot);
+            }
+        }
         newRoot.setLeftNode(current);
         newRoot.setParentNode(current.getParentNode());
         current.setParentNode(newRoot);

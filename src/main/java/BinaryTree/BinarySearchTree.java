@@ -128,7 +128,7 @@ public class BinarySearchTree<T> extends Tree {
                 }
 
             } else if (current.getLeftNode() != null && current.getRightNode() == null) {
-                if (current.getParentNode().getKey() < current.getRightNode().getKey()) {
+                if (current.getParentNode().getKey() < current.getLeftNode().getKey()) {
                     current.getParentNode().setRightNode(current.getLeftNode());
                     current.getLeftNode().setParentNode(current.getParentNode());
                 } else {
