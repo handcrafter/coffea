@@ -14,11 +14,11 @@ public class BinaryTree<T> extends Tree {
     }
 
     // Constructors
-    BinaryTree(T key) {
-        current = new BinaryNode<T>(key);
+    BinaryTree(int key, T value) {
+        current = new BinaryNode<T>(key, value);
     }
 
-    public void setLeftChild(T key) {
+    public void setLeftChild(int key) {
         BinaryNode<T> node = current.getLeftNode();
         if (node == null) {
             node = new BinaryNode<T>();
@@ -28,7 +28,7 @@ public class BinaryTree<T> extends Tree {
         current.setLeftNode(node);
     }
 
-    public void setRightChild(T key) {
+    public void setRightChild(int key) {
         BinaryNode<T> node = current.getRightNode();
         if (node == null) {
             node = new BinaryNode<T>();

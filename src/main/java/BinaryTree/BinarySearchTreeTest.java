@@ -38,17 +38,34 @@ public class BinarySearchTreeTest {
         *   5371469
         *   Inorder :
         *   1345679
+        *
+        *   Another Example :
+        *
+        *               8
+        *             /   \
+        *           4       12
+        *          / \     /  \
+        *        1    7  10    15
+        *            /     \
+        *           5       11
+        *
+        *   Second Example
+        *   BFS : 8412171015511
+        *   Inorder : 1457810111215
+        *   Is 15 in the tree? : true
+        *   Remove 12 from the tree
+        *   14578101115
         */
 
-        BinarySearchTree bsTree = new BinarySearchTree(5);
+        BinarySearchTree bsTree = new BinarySearchTree(5, null);
         // Insert a node
-        bsTree.insert(2);
-        bsTree.insert(1);
-        bsTree.insert(7);
-        bsTree.insert(3);
-        bsTree.insert(4);
-        bsTree.insert(9);
-        bsTree.insert(6);
+        bsTree.insert(2, null);
+        bsTree.insert(1, null);
+        bsTree.insert(7, null);
+        bsTree.insert(3, null);
+        bsTree.insert(4, null);
+        bsTree.insert(9, null);
+        bsTree.insert(6, null);
         bsTree.printBFS();
 
         // Search for key
@@ -60,8 +77,28 @@ public class BinarySearchTreeTest {
         bsTree.printBFS();
 
         //print tree in order
-        System.out.println("\n" + "Inorder : ");
+        System.out.print("\n" + "Inorder : ");
         bsTree.printInorder();
-    }
 
+
+        System.out.println("\n" + "Second Example");
+        BinarySearchTree bt = new BinarySearchTree(8, null);
+        bt.insert(4, null);
+        bt.insert(12, null);
+        bt.insert(1, null);
+        bt.insert(7, null);
+        bt.insert(10, null);
+        bt.insert(15, null);
+        bt.insert(5, null);
+        bt.insert(11, null);
+        System.out.print("BFS : ");
+        bt.printBFS();
+        System.out.print("\n" + "Inorder : ");
+        bt.printInorder();
+        System.out.print("\n" + "Is 15 in the tree? : " + bt.contains(15));
+        System.out.println("\n" + "Remove 12 from the tree");
+        bt.delete(12);
+        System.out.print("Inorder : ");
+        bt.printInorder();
+    }
 }

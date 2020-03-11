@@ -10,7 +10,7 @@ public class BinarySearchTree<T> extends Tree {
 
     // Constructors
     BinarySearchTree() { current = null; }
-    BinarySearchTree(T key) { current = new BinaryNode<T>(key); }
+    BinarySearchTree(int key, T value) { current = new BinaryNode<T>(key, value); }
 
     // Traversing methods
     public void moveToLeftNode() { current = current.getLeftNode(); }
@@ -21,28 +21,30 @@ public class BinarySearchTree<T> extends Tree {
 
 
     // Setters
-    public void setLeftChild(T key) {
+    public void setLeftChild(int key, T value) {
         BinaryNode<T> node = current.getLeftNode();
         if (node == null) {
             node = new BinaryNode<T>();
         }
         node.setKey(key);
+        node.setValue(value);
         node.setParentNode(current);
         current.setLeftNode(node);
     }
 
-    public void setRightChild(T key) {
+    public void setRightChild(int key, T value) {
         BinaryNode<T> node = current.getRightNode();
         if (node == null) {
             node = new BinaryNode<T>();
         }
         node.setKey(key);
+        node.setValue(value);
         node.setParentNode(current);
         current.setRightNode(node);
     }
 
-    // Search
-    public boolean contains(T key) {
+    // Contains
+    public boolean contains(int key) {
         BinaryNode<T> original_position = current;
         Boolean result = false;
 
@@ -64,36 +66,35 @@ public class BinarySearchTree<T> extends Tree {
     }
 
     // Insertion
-    public void insert(T newNode) {
+    public void insert(int insert_key, T value) {
         BinaryNode<T> original_position = current;
-        BinaryNode<T> node = new BinaryNode<T>(newNode);
+        BinaryNode<T> node = new BinaryNode<T>(insert_key, value);
 
         if (current == null) { current = node; }
 
-        if ((Integer) current.getKey() < (Integer) newNode) {
+        if (current.getKey() < insert_key) {
             if (current.getRightNode() == null) {
-                setRightChild(node.getKey());
+                setRightChild(node.getKey(), value);
             } else {
                 moveToRightNode();
-                insert(newNode);
+                insert(insert_key, value);
             }
-        } else if ((Integer) current.getKey() > (Integer) newNode) {
+        } else if (current.getKey() > insert_key) {
             if (current.getLeftNode() == null) {
-                setLeftChild(node.getKey());
+                setLeftChild(node.getKey(), value);
             } else {
                 moveToLeftNode();
-                insert(newNode);
+                insert(insert_key, value);
             }
         }
         current = original_position;
     }
 
-    //
-    public void delete(T delete_key) {
+    // Deletion
+    public void delete(int delete_key) {
         BinaryNode<T> original_position = current;
 
-
-        if (delete_key == null) return;
+        if (delete_key == 0) return;
 
         while (current.getLeftNode() != null || current.getRightNode() != null) {
             if ((Integer) current.getKey() < (Integer) delete_key) {
@@ -118,17 +119,26 @@ public class BinarySearchTree<T> extends Tree {
             }
             // Deleting a node with one child
             else if (current.getLeftNode() == null && current.getRightNode() != null) {
-                current.getParentNode().setRightNode(current.getRightNode());
-                current.getRightNode().setParentNode(current.getParentNode());
+                if (current.getParentNode().getKey() < current.getRightNode().getKey()) {
+                    current.getParentNode().setRightNode(current.getRightNode());
+                    current.getRightNode().setParentNode(current.getParentNode());
+                } else {
+                    current.getParentNode().setLeftNode(current.getRightNode());
+                    current.getRightNode().setParentNode(current.getParentNode());
+                }
 
             } else if (current.getLeftNode() != null && current.getRightNode() == null) {
-                current.getParentNode().setLeftNode(current.getLeftNode());
-                current.getLeftNode().setParentNode(current.getParentNode());
-
+                if (current.getParentNode().getKey() < current.getLeftNode().getKey()) {
+                    current.getParentNode().setRightNode(current.getLeftNode());
+                    current.getLeftNode().setParentNode(current.getParentNode());
+                } else {
+                    current.getParentNode().setLeftNode(current.getLeftNode());
+                    current.getLeftNode().setParentNode(current.getParentNode());
+                }
             }
             // Deleting a node with two children
             else {
-                BinaryNode<T> successor = successor();
+                BinaryNode<T> successor = find_successor();
                 delete(successor.getKey());
                 current.setKey(successor.getKey());
             }
@@ -137,17 +147,15 @@ public class BinarySearchTree<T> extends Tree {
     }
 
     // Get min node in subtree
-    public BinaryNode<T> successor() {
-        moveToRightNode();
+    public BinaryNode<T> find_successor() {
         BinaryNode<T> original_position = current;
-
+        moveToRightNode();
         while (current.getLeftNode() != null) {
             moveToLeftNode();
         }
-        BinaryNode<T> min_Node = current;
+        BinaryNode<T> successor = current;
         current = original_position;
-        moveToParentNode();
-        return min_Node;
+        return successor;
     }
 
     public void printInorder() {
@@ -206,5 +214,4 @@ public class BinarySearchTree<T> extends Tree {
             if (node.getRightNode() != null) queue.add(node.getRightNode());
         }
     }
-
 }
