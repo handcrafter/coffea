@@ -16,9 +16,7 @@ public class BinaryTree<T> extends Tree {
     }
 
     // Constructors
-    public BinaryTree(int key, T value) {
-        current = new BinaryNode<T>(key, value);
-    }
+    public BinaryTree(int key, T value) { current = new BinaryNode<T>(key, value); }
 
     public void setLeftChild(int key, T value) {
         if (current == null) return;
@@ -45,20 +43,22 @@ public class BinaryTree<T> extends Tree {
     }
 
     public void moveToLeftNode() {
+        assert current == null : "current must not be null";
         current = current.getLeftNode();
     }
 
     public void moveToRightNode() {
+        assert current == null : "current must not be null";
         current = current.getRightNode();
     }
 
     public void moveToParentNode() {
+        assert current == null : "current must not be null";
         current = current.getParentNode();
     }
 
     @Override
     public void printDFS() {
-        BinaryNode<T> original_position = current;
         assert current == null : "current must not be null";
 
         current.print();
@@ -74,8 +74,6 @@ public class BinaryTree<T> extends Tree {
             printDFS();
             moveToParentNode();
         }
-
-        current = original_position;
     }
 
     @Override

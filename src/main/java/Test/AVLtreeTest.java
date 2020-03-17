@@ -34,7 +34,7 @@ public class AVLtreeTest {
         *      1
         */
 
-        AVLtree a = new AVLtree(10, null, 0);
+        AVLtree<String> a = new AVLtree(10, null, 0);
         a.insert(20, null);
         a.insert(30, null);
         a.insert(40, null);
@@ -43,7 +43,7 @@ public class AVLtreeTest {
         a.printBFS();
 
         System.out.println("\n"+"Second example :");
-        AVLtree b = new AVLtree(5, null, 0);
+        AVLtree<String> b = new AVLtree(5, null, 0);
         b.insert(3, null);
         b.insert(2, null);
         b.insert(7, null);
