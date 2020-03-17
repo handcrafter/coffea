@@ -34,20 +34,20 @@ public class AVLtreeTest {
         *      1
         */
 
-        AVLtree<String> a = new AVLtree(10, null, 0);
-        a.insert(20, null);
-        a.insert(30, null);
-        a.insert(40, null);
-        a.insert(50, null);
-        a.insert(25, null);
+        AVLtree<String> a = new AVLtree(10, "10", 0);
+        a.insert(20, "20");
+        a.insert(30, "30");
+        a.insert(40, "40");
+        a.insert(50, "50");
+        a.insert(25, "25");
         a.printBFS();
 
         System.out.println("\n"+"Second example :");
-        AVLtree<String> b = new AVLtree(5, null, 0);
-        b.insert(3, null);
-        b.insert(2, null);
-        b.insert(7, null);
-        b.insert(1, null);
+        AVLtree<String> b = new AVLtree(5, "5", 0);
+        b.insert(3, "3");
+        b.insert(2, "2");
+        b.insert(7, "7");
+        b.insert(1, "1");
         b.printBFS();
     }
 }
