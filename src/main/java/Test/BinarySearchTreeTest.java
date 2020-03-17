@@ -2,9 +2,7 @@ package Test;
 
 import Tree.BinarySearchTree;
 
-/**
- * Created by jaewonlee on 2020-02-29.
- */
+
 public class BinarySearchTreeTest {
     public static void main(String[] args) {
 

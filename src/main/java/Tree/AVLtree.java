@@ -7,7 +7,7 @@ public class AVLtree<T> extends BinarySearchTree<T> {
 
     public AVLtree() { current = null; }
 
-    public AVLtree(int key, T value) { current = new AVLNode<T>(key, value); }
+    public AVLtree(int key, T value, int height) { current = new AVLNode<T>(key, value, height); }
 
     public void moveToLeftNode() { current = (AVLNode<T>) current.getLeftNode(); }
 
@@ -17,10 +17,9 @@ public class AVLtree<T> extends BinarySearchTree<T> {
 
     @Override
     public void setLeftChild(int key, T value) {
+        assert current == null : "current must not be null";
         AVLNode<T> node = (AVLNode<T>) current.getLeftNode();
-        if (node == null) {
-            node = new AVLNode<T>();
-        }
+        if (node == null) { node = new AVLNode<T>(); }
         node.setKey(key);
         node.setParentNode(current);
         node.setValue(value);
@@ -30,10 +29,9 @@ public class AVLtree<T> extends BinarySearchTree<T> {
 
     @Override
     public void setRightChild(int key, T value) {
+        assert current == null : "current must not be null";
         AVLNode<T> node = (AVLNode<T>) current.getRightNode();
-        if (node == null) {
-            node = new AVLNode<T>();
-        }
+        if (node == null) { node = new AVLNode<T>(); }
         node.setKey(key);
         node.setParentNode(current);
         node.setValue(value);
@@ -70,7 +68,7 @@ public class AVLtree<T> extends BinarySearchTree<T> {
     }
 
     public void bst_insert(int insert_key, T value) {
-        AVLNode<T> node = new AVLNode<T>(insert_key, value);
+        AVLNode<T> node = new AVLNode<T>(insert_key, value, 0);
 
         if (current == null) { current = node; }
 
@@ -118,7 +116,7 @@ public class AVLtree<T> extends BinarySearchTree<T> {
     }
 
     public void bst_delete(int delete_key) {
-        if (current == null) return;
+        assert current == null : "current must not be null";
 
         if (current.getKey() < delete_key) {
             if (current.getRightNode() == null) return;
