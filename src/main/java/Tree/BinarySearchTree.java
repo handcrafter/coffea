@@ -1,49 +1,14 @@
-package BinaryTree;
+package Tree;
 
-import Base.Tree;
-import java.util.LinkedList;
-import java.util.Queue;
+import Node.BinaryNode;
 
 
-public class BinarySearchTree<T> extends Tree {
-    BinaryNode<T> current;
+public class BinarySearchTree<T> extends BinaryTree<T> {
 
-    // Constructors
-    BinarySearchTree() { current = null; }
-    BinarySearchTree(int key, T value) { current = new BinaryNode<T>(key, value); }
+    public BinarySearchTree() { current = null; }
 
-    // Traversing methods
-    public void moveToLeftNode() { current = current.getLeftNode(); }
+    public BinarySearchTree(int key, T value) { current = new BinaryNode<T>(key, value); }
 
-    public void moveToRightNode() { current = current.getRightNode(); }
-
-    public void moveToParentNode() { current = current.getParentNode(); }
-
-
-    // Setters
-    public void setLeftChild(int key, T value) {
-        BinaryNode<T> node = current.getLeftNode();
-        if (node == null) {
-            node = new BinaryNode<T>();
-        }
-        node.setKey(key);
-        node.setValue(value);
-        node.setParentNode(current);
-        current.setLeftNode(node);
-    }
-
-    public void setRightChild(int key, T value) {
-        BinaryNode<T> node = current.getRightNode();
-        if (node == null) {
-            node = new BinaryNode<T>();
-        }
-        node.setKey(key);
-        node.setValue(value);
-        node.setParentNode(current);
-        current.setRightNode(node);
-    }
-
-    // Contains
     public boolean contains(int key) {
         BinaryNode<T> original_position = current;
         Boolean result = false;
@@ -65,7 +30,6 @@ public class BinarySearchTree<T> extends Tree {
         return result;
     }
 
-    // Insertion
     public void insert(int insert_key, T value) {
         BinaryNode<T> original_position = current;
         BinaryNode<T> node = new BinaryNode<T>(insert_key, value);
@@ -90,7 +54,6 @@ public class BinarySearchTree<T> extends Tree {
         current = original_position;
     }
 
-    // Deletion
     public void delete(int delete_key) {
         BinaryNode<T> original_position = current;
 
@@ -176,42 +139,6 @@ public class BinarySearchTree<T> extends Tree {
             moveToRightNode();
             printInorder();
             moveToParentNode();
-        }
-    }
-
-    @Override
-    public void printDFS() {
-        BinaryNode<T> original_position = current;
-        if (current == null) return;
-
-        current.print();
-
-        if (current.getLeftNode() != null) {
-            moveToLeftNode();
-            printDFS();
-            moveToParentNode();
-        }
-
-        if (current.getRightNode() != null) {
-            moveToRightNode();
-            printDFS();
-            moveToParentNode();
-        }
-
-        current = original_position;
-    }
-
-    @Override
-    public void printBFS() {
-        Queue<BinaryNode<T>> queue = new LinkedList<BinaryNode<T>>() ;
-        if (current == null) return;
-
-        queue.add(current);
-        while (!queue.isEmpty()) {
-            BinaryNode<T> node = queue.remove();
-            node.print();
-            if (node.getLeftNode() != null) queue.add(node.getLeftNode());
-            if (node.getRightNode() != null) queue.add(node.getRightNode());
         }
     }
 }

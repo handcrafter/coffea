@@ -1,6 +1,8 @@
-package BinaryTree;
+package Tree;
 
 import Base.Tree;
+import Node.BinaryNode;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -9,31 +11,33 @@ public class BinaryTree<T> extends Tree {
 
     BinaryNode<T> current;
 
-    BinaryTree() {
+    public BinaryTree() {
         current = null;
     }
 
     // Constructors
-    BinaryTree(int key, T value) {
+    public BinaryTree(int key, T value) {
         current = new BinaryNode<T>(key, value);
     }
 
-    public void setLeftChild(int key) {
+    public void setLeftChild(int key, T value) {
         BinaryNode<T> node = current.getLeftNode();
         if (node == null) {
             node = new BinaryNode<T>();
         }
         node.setKey(key);
+        node.setValue(value);
         node.setParentNode(current);
         current.setLeftNode(node);
     }
 
-    public void setRightChild(int key) {
+    public void setRightChild(int key, T value) {
         BinaryNode<T> node = current.getRightNode();
         if (node == null) {
             node = new BinaryNode<T>();
         }
         node.setKey(key);
+        node.setValue(value);
         node.setParentNode(current);
         current.setRightNode(node);
     }

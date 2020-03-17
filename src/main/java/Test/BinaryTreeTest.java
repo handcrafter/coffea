@@ -1,5 +1,7 @@
-package BinaryTree;
+package Test;
 
+
+import Tree.BinaryTree;
 
 public class BinaryTreeTest {
 
@@ -15,27 +17,26 @@ public class BinaryTreeTest {
          *  - Maximum height: O(N)
          *
          *  Below example tree has depth of 3
-         *         0
+         *         1
          *       /   \
-         *      1     2
+         *      2     3
          *     / \   / \
-         *    3   4 5   6
+         *    4   5 6   7
          *
          *   Running the program will traverse the tree and print values in BFS and DFS order
          *   BFS : 0123456  DFS : 0134256
          */
 
-
         BinaryTree bt = new BinaryTree(1, null);
-        bt.setLeftChild(2);
-        bt.setRightChild(3);
+        bt.setLeftChild(2, null);
+        bt.setRightChild(3, null);
         bt.moveToLeftNode();
-        bt.setLeftChild(4);
-        bt.setRightChild(5);
+        bt.setLeftChild(4, null);
+        bt.setRightChild(5, null);
         bt.moveToParentNode();
         bt.moveToRightNode();
-        bt.setLeftChild(6);
-        bt.setRightChild(7);
+        bt.setLeftChild(6, null);
+        bt.setRightChild(7, null);
         bt.moveToParentNode();
 
         System.out.print("BFS : ");
