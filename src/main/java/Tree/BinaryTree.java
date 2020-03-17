@@ -21,6 +21,7 @@ public class BinaryTree<T> extends Tree {
     }
 
     public void setLeftChild(int key, T value) {
+        if (current == null) return;
         BinaryNode<T> node = current.getLeftNode();
         if (node == null) {
             node = new BinaryNode<T>();
@@ -32,6 +33,7 @@ public class BinaryTree<T> extends Tree {
     }
 
     public void setRightChild(int key, T value) {
+        if (current == null) return;
         BinaryNode<T> node = current.getRightNode();
         if (node == null) {
             node = new BinaryNode<T>();
@@ -57,7 +59,7 @@ public class BinaryTree<T> extends Tree {
     @Override
     public void printDFS() {
         BinaryNode<T> original_position = current;
-        if (current == null) return;
+        assert current == null : "current must not be null";
 
         current.print();
 
@@ -79,7 +81,7 @@ public class BinaryTree<T> extends Tree {
     @Override
     public void printBFS() {
         Queue<BinaryNode<T>> queue = new LinkedList<BinaryNode<T>>() ;
-        if (current == null) return;
+        assert current == null : "current must not be null";
 
         queue.add(current);
         while (!queue.isEmpty()) {

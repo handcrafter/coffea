@@ -1,7 +1,7 @@
 package Test;
 
-
 import Tree.BinaryTree;
+
 
 public class BinaryTreeTest {
 
@@ -27,7 +27,7 @@ public class BinaryTreeTest {
          *   BFS : 0123456  DFS : 0134256
          */
 
-        BinaryTree bt = new BinaryTree(1, null);
+        BinaryTree<String> bt = new BinaryTree(1, null);
         bt.setLeftChild(2, null);
         bt.setRightChild(3, null);
         bt.moveToLeftNode();

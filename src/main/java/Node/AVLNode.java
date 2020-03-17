@@ -1,8 +1,6 @@
 package Node;
 
-/**
- * Created by jaewonlee on 2020-03-16.
- */
+
 public class AVLNode<T> extends BinaryNode {
     private int height;
 
@@ -10,8 +8,9 @@ public class AVLNode<T> extends BinaryNode {
         super();
     }
 
-    public AVLNode(int key, T value) {
+    public AVLNode(int key, T value, int height) {
         super(key, value);
+        setHeight(height);
     }
 
     public void setHeight(int height) {
