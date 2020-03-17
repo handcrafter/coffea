@@ -1,4 +1,6 @@
-package BinaryTree;
+package Test;
+
+import Tree.AVLtree;
 
 /**
  * Created by jaewonlee on 2020-03-04.
