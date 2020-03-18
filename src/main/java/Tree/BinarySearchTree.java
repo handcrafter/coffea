@@ -13,13 +13,13 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         root = current;
     }
 
-    private void setLeft(BinaryNode<T> leftChild, BinaryNode<T> parent) {
+    protected void setLeft(BinaryNode<T> leftChild, BinaryNode<T> parent) {
         assert parent == null : "Parent node must not be null";
         parent.setLeftNode(leftChild);
         leftChild.setParentNode(parent);
     }
 
-    private void setRight(BinaryNode<T> rightChild, BinaryNode<T> parent) {
+    protected void setRight(BinaryNode<T> rightChild, BinaryNode<T> parent) {
         assert parent == null : "Parent node must not be null";
         parent.setRightNode(rightChild);
         rightChild.setParentNode(parent);
@@ -63,9 +63,13 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
     protected BinaryNode<T> getSuccessor (BinaryNode<T> node) {
         assert node == null : "Input node must not be null";
 
-        node = node.getRightNode();
-        while (node.getLeftNode() != null) {
-            node = node.getLeftNode();
+        if (node.getRightNode() != null) {
+            node = node.getRightNode();
+            while (node.getLeftNode() != null) {
+                node = node.getLeftNode();
+            }
+        } else {
+            return null;
         }
         return node;
     }
@@ -73,11 +77,14 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
     protected BinaryNode<T> getPredecessor (BinaryNode<T> node) {
         assert node == null : "Input node must not be null";
 
-        node = node.getLeftNode();
-        while (node.getRightNode() != null) {
-            node = node.getRightNode();
+        if (node.getLeftNode() != null) {
+            node = node.getLeftNode();
+            while (node.getRightNode() != null) {
+                node = node.getRightNode();
+            }
+        } else {
+            return null;
         }
-
         return node;
     }
 
