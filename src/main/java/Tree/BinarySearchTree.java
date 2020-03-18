@@ -13,56 +13,37 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         root = current;
     }
 
-    public void setLeft(BinaryNode<T> leftChild, BinaryNode<T> parent) {
+    private void setLeft(BinaryNode<T> leftChild, BinaryNode<T> parent) {
         assert parent == null : "Parent node must not be null";
         parent.setLeftNode(leftChild);
         leftChild.setParentNode(parent);
     }
 
-    public void setRight(BinaryNode<T> rightChild, BinaryNode<T> parent) {
+    private void setRight(BinaryNode<T> rightChild, BinaryNode<T> parent) {
         assert parent == null : "Parent node must not be null";
         parent.setRightNode(rightChild);
         rightChild.setParentNode(parent);
     }
 
     public boolean contains(int key) {
-        Boolean result = false;
-
-        while (current != null) {
-            if (current.getKey() == key) {
-                result = true;
-                break;
-            } else if (current.getKey() < key) {
-                moveToRightNode();
-            } else if (current.getKey() > key) {
-                moveToLeftNode();
-            }
+        BinaryNode<T> node = getNode(key);
+        if (node == null) {
+            return false;
+        } else {
+            return true;
         }
-
-        current = root;
-        return result;
     }
 
-    public T get_value(int key) {
-        T result = null;
-
-        while (current != null) {
-            if (current.getKey() == key) {
-                result = current.getValue();
-                break;
-            } else if (current.getKey() < key) {
-                moveToRightNode();
-            } else if (current.getKey() > key) {
-                moveToLeftNode();
-            }
-        }
-
-        current = root;
-        return result;
+    public T getValue(int key) {
+        BinaryNode<T> node = getNode(key);
+        assert node == null : "key does not exist";
+        return node.getValue();
     }
 
-    protected BinaryNode<T> get_node (int key) {
+    protected BinaryNode<T> getNode (int key) {
         BinaryNode<T> result = null;
+        BinaryNode<T> originalPosition = current;
+        current = root;
 
         while (current != null) {
             if (current.getKey() == key) {
@@ -75,78 +56,118 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
             }
         }
 
-        current = root;
+        current = originalPosition;
         return result;
     }
 
-    protected BinaryNode<T> get_successor (BinaryNode<T> node) {
-        assert node == null : "node must not be null";
-        BinaryNode<T> successor = null;
+    protected BinaryNode<T> getSuccessor (BinaryNode<T> node) {
+        assert node == null : "Input node must not be null";
 
-        if (node.getLeftNode() == null && node.getRightNode() == null) {
-            successor = node;
-        } else if (node.getRightNode() != null){
-            node = node.getRightNode();
-            while (node.getLeftNode() != null) {
-                node = node.getLeftNode();
-            }
-            successor = node;
-        } else if (node.getLeftNode() != null) {
+        node = node.getRightNode();
+        while (node.getLeftNode() != null) {
             node = node.getLeftNode();
-            while (node.getRightNode() != null) {
-                node = node.getRightNode();
-            }
-            successor = node;
         }
-        return successor;
+        return node;
+    }
+
+    protected BinaryNode<T> getPredecessor (BinaryNode<T> node) {
+        assert node == null : "Input node must not be null";
+
+        node = node.getLeftNode();
+        while (node.getRightNode() != null) {
+            node = node.getRightNode();
+        }
+
+        return node;
+    }
+
+    private void swapWithSuccessor(BinaryNode<T> deleteNode, BinaryNode<T> successor) {
+        deleteNode.setKey(successor.getKey());
+        deleteNode.setValue(successor.getValue());
+
+        int successorKey = successor.getKey();
+        int parentKey = successor.getParentNode().getKey();
+        if (successor.getRightNode() != null) {
+            if (successorKey < parentKey) {
+                successor.getParentNode().setLeftNode(successor.getRightNode());
+                successor.getRightNode().setParentNode(successor.getParentNode());
+            } else {
+                successor.getParentNode().setRightNode(successor.getRightNode());
+                successor.getRightNode().setParentNode(successor.getParentNode());
+            }
+        } else {
+            if (successorKey < parentKey) {
+                successor.getParentNode().setLeftNode(null);
+            } else {
+                successor.getParentNode().setRightNode(null);
+            }
+        }
+    }
+
+    public void swapWithPredecessor(BinaryNode<T> deleteNode, BinaryNode<T> predecessor) {
+        deleteNode.setKey(predecessor.getKey());
+        deleteNode.setValue(predecessor.getValue());
+
+        int predecessorKey = predecessor.getKey();
+        int parentKey = predecessor.getParentNode().getKey();
+        if (predecessor.getLeftNode() != null) {
+            if (predecessorKey < parentKey) {
+                predecessor.getParentNode().setLeftNode(predecessor.getLeftNode());
+                predecessor.getLeftNode().setParentNode(predecessor.getParentNode());
+            } else {
+                predecessor.getParentNode().setRightNode(predecessor.getLeftNode());
+                predecessor.getLeftNode().setParentNode(predecessor.getParentNode());
+            }
+        } else {
+            if (predecessorKey < parentKey) {
+                predecessor.getParentNode().setLeftNode(null);
+            } else {
+                predecessor.getParentNode().setRightNode(null);
+            }
+        }
     }
 
     public void delete (int delete_key) {
-        BinaryNode<T> deleteNode = get_node(delete_key);
-        BinaryNode<T> successor = get_successor(deleteNode);
+        BinaryNode<T> deleteNode = getNode(delete_key);
+        if (deleteNode == null) return;
 
-        // key not in tree
-        if (get_node(delete_key) == null) return;
+        BinaryNode<T> successor = getSuccessor(deleteNode);
+        if (successor == null) {
+            BinaryNode<T> predecessor = getPredecessor(deleteNode);
+            if (predecessor == null) {
+                // success and predecessor do not exist
 
-        if (deleteNode == successor) {
-            current = null;
-        } else {
-            deleteNode.setKey(successor.getKey());
-            deleteNode.setValue(successor.getValue());
-            // delete successor node
-            if (successor.getLeftNode() == null && successor.getRightNode() == null) {
-                if (successor == successor.getParentNode().getLeftNode()) {
-                    successor.getParentNode().setLeftNode(null);
+                BinaryNode<T> parent_node = deleteNode.getParentNode();
+                if (parent_node == null) {
+                    root = null;
+                    current = null;
                 } else {
-                    successor.getParentNode().setRightNode(null);
+                    int parent_key = parent_node.getKey();
+                    if (delete_key < parent_key) {
+                        parent_node.setLeftNode(null);
+                    } else {
+                        parent_node.setRightNode(null);
+                    }
                 }
-            } else if (successor.getLeftNode() != null) {
-                if (successor == successor.getParentNode().getLeftNode()) {
-                    successor.getParentNode().setLeftNode(successor.getLeftNode());
-                    successor.getLeftNode().setParentNode(successor.getParentNode());
-                } else {
-                    successor.getParentNode().setRightNode(successor.getLeftNode());
-                    successor.getLeftNode().setParentNode(successor.getParentNode());
-                }
-            } else if (successor.getRightNode() != null) {
-                if (successor == successor.getParentNode().getLeftNode()) {
-                    successor.getParentNode().setLeftNode(successor.getRightNode());
-                    successor.getRightNode().setParentNode(successor.getParentNode());
-                } else {
-                    successor.getParentNode().setRightNode(successor.getRightNode());
-                    successor.getRightNode().setParentNode(successor.getParentNode());
-                }
+            } else {
+                swapWithPredecessor(deleteNode, predecessor);
             }
+        } else {
+            swapWithSuccessor(deleteNode, successor);
         }
     }
 
     public void insert(int insert_key, T value) {
-        if (current == null) {
+        if (root == null) {
             BinaryNode<T> node = new BinaryNode<T>(insert_key, value);
-            current = node;
+            root = current = node;
+            return;
         }
 
-        if (current.getKey() < insert_key) {
+        BinaryNode<T> originalPosition = current;
+        if (current.getKey() == insert_key) {
+          current.setValue(value);
+        } if (current.getKey() < insert_key) {
             if (current.getRightNode() == null) {
                 BinaryNode<T> node = new BinaryNode<T>(insert_key, value);
                 setRight(node, current);
@@ -163,7 +184,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
                 insert(insert_key, value);
             }
         }
-        current = root;
+        current = originalPosition;
     }
 
     public void printInorder() {
