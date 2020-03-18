@@ -57,7 +57,7 @@ public class BinarySearchTreeTest {
         *   14578101115
         */
 
-        BinarySearchTree bsTree = new BinarySearchTree(5, null);
+        BinarySearchTree<String> bsTree = new BinarySearchTree(5, null);
         // Insert a node
         bsTree.insert(2, null);
         bsTree.insert(1, null);
@@ -82,7 +82,7 @@ public class BinarySearchTreeTest {
 
 
         System.out.println("\n" + "Second Example");
-        BinarySearchTree bt = new BinarySearchTree(8, null);
+        BinarySearchTree<String> bt = new BinarySearchTree(8, null);
         bt.insert(4, null);
         bt.insert(12, null);
         bt.insert(1, null);
