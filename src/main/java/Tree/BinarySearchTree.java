@@ -13,13 +13,13 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         root = current;
     }
 
-    private void setLeft(BinaryNode<T> leftChild, BinaryNode<T> parent) {
+    private void setLeftChild(BinaryNode<T> leftChild, BinaryNode<T> parent) {
         assert parent == null : "Parent node must not be null";
         parent.setLeftNode(leftChild);
         leftChild.setParentNode(parent);
     }
 
-    private void setRight(BinaryNode<T> rightChild, BinaryNode<T> parent) {
+    private void setRightChild(BinaryNode<T> rightChild, BinaryNode<T> parent) {
         assert parent == null : "Parent node must not be null";
         parent.setRightNode(rightChild);
         rightChild.setParentNode(parent);
@@ -27,11 +27,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
 
     public boolean contains(int key) {
         BinaryNode<T> node = getNode(key);
-        if (node == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return node != null;
     }
 
     public T getValue(int key) {
@@ -163,14 +159,13 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
             root = current = node;
             return;
         }
-
         BinaryNode<T> originalPosition = current;
         if (current.getKey() == insert_key) {
           current.setValue(value);
         } if (current.getKey() < insert_key) {
             if (current.getRightNode() == null) {
                 BinaryNode<T> node = new BinaryNode<T>(insert_key, value);
-                setRight(node, current);
+                setRightChild(node, current);
             } else {
                 moveToRightNode();
                 insert(insert_key, value);
@@ -178,7 +173,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         } else if (current.getKey() > insert_key) {
             if (current.getLeftNode() == null) {
                 BinaryNode<T> node = new BinaryNode<T>(insert_key, value);
-                setLeft(node, current);
+                setLeftChild(node, current);
             } else {
                 moveToLeftNode();
                 insert(insert_key, value);
@@ -189,15 +184,12 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
 
     public void printInorder() {
         if (current == null) return;
-
         if (current.getLeftNode() != null) {
             moveToLeftNode();
             printInorder();
             moveToParentNode();
         }
-
         current.print();
-
         if (current.getRightNode() != null) {
             moveToRightNode();
             printInorder();
