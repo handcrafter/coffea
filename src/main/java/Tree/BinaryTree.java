@@ -57,6 +57,18 @@ public class BinaryTree<T> extends Tree {
         current = current.getParentNode();
     }
 
+    protected void linkNodes(BinaryNode<T> parent, BinaryNode<T> child, char lr) {
+        assert parent == null : "Parent node must not be null";
+        assert (lr == 'R' || lr == 'R') : "Input must be either R or L";
+        if (lr == 'L') {
+            parent.setLeftNode(child);
+            if (child != null) child.setParentNode(parent);
+        } else { // lr =='R'
+            parent.setRightNode(child);
+            if (child != null) child.setParentNode(parent);
+        }
+    }
+
     @Override
     public void printDFS() {
         assert current == null : "current must not be null";
