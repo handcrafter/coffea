@@ -63,7 +63,7 @@ public class BinaryTree<T> extends Tree {
         if (lr == 'L') {
             parent.setLeftNode(child);
             if (child != null) child.setParentNode(parent);
-        } else if (lr == 'R'){
+        } else { // lr =='R'
             parent.setRightNode(child);
             if (child != null) child.setParentNode(parent);
         }

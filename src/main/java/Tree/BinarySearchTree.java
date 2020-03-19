@@ -112,20 +112,20 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         BinaryNode<T> parent = predecessor.getParentNode();
         if (predecessor.getLeftNode() != null) {
             if (predecessor.getKey() < parent.getKey()) {
-                linkNodes(predecessor.getParentNode(), predecessor.getLeftNode(), 'L');
+                linkNodes(parent, predecessor.getLeftNode(), 'L');
             } else {
-                linkNodes(predecessor.getParentNode(), predecessor.getLeftNode(), 'R');
+                linkNodes(parent, predecessor.getLeftNode(), 'R');
             }
         } else {
             if (predecessor.getKey() < parent.getKey()) {
-                predecessor.getParentNode().setLeftNode(null);
+                parent.setLeftNode(null);
             } else {
-                predecessor.getParentNode().setRightNode(null);
+                parent.setRightNode(null);
             }
         }
     }
 
-    public void delete (int delete_key) {
+    public void delete(int delete_key) {
         BinaryNode<T> deleteNode = getNode(delete_key);
         if (deleteNode == null) return;
 
@@ -164,25 +164,28 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         }
         BinaryNode<T> originalPosition = current;
         current = root;
-        if (current.getKey() == insert_key) {
-          current.setValue(value);
-        }
 
-        if (current.getKey() < insert_key) {
-            if (current.getRightNode() == null) {
-                BinaryNode<T> node = new BinaryNode<T>(insert_key, value);
-                setRightChild(node, current);
-            } else {
-                moveToRightNode();
-                insert(insert_key, value);
+        while (true) {
+            if (current.getKey() == insert_key) {
+                current.setValue(value);
+                break;
             }
-        } else if (current.getKey() > insert_key) {
-            if (current.getLeftNode() == null) {
-                BinaryNode<T> node = new BinaryNode<T>(insert_key, value);
-                setLeftChild(node, current);
-            } else {
-                moveToLeftNode();
-                insert(insert_key, value);
+            if (current.getKey() < insert_key) {
+                if (current.getRightNode() == null) {
+                    BinaryNode<T> node = new BinaryNode<T>(insert_key, value);
+                    setRightChild(node, current);
+                    break;
+                } else {
+                    moveToRightNode();
+                }
+            } else if (current.getKey() > insert_key) {
+                if (current.getLeftNode() == null) {
+                    BinaryNode<T> node = new BinaryNode<T>(insert_key, value);
+                    setLeftChild(node, current);
+                    break;
+                } else {
+                    moveToLeftNode();
+                }
             }
         }
         current = originalPosition;
