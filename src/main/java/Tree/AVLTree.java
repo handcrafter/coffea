@@ -3,11 +3,11 @@ package Tree;
 import Node.AVLNode;
 
 
-public class AVLtree<T> extends BinarySearchTree<T> {
+public class AVLTree<T> extends BinarySearchTree<T> {
 
-    public AVLtree() { current = root = null; }
+    public AVLTree() { current = root = null; }
 
-    public AVLtree(int key, T value, int height) {
+    public AVLTree(int key, T value, int height) {
         current = new AVLNode<T>(key, value, height);
         root = current;
     }
@@ -27,7 +27,7 @@ public class AVLtree<T> extends BinarySearchTree<T> {
         }
     }
 
-    public int getDepthDifference(AVLNode<T> target) {
+    public int getHeightDifference(AVLNode<T> target) {
         AVLNode<T> rightNode = (AVLNode<T>) target.getRightNode();
         AVLNode<T> leftNode = (AVLNode<T>) target.getLeftNode();
 
@@ -42,33 +42,42 @@ public class AVLtree<T> extends BinarySearchTree<T> {
         }
     }
 
-    public void balanceTreeAfterInsertion(int key, AVLNode<T> node) {
-        int depth_difference = getDepthDifference(node);
-        if (depth_difference > 1 && key < node.getLeftNode().getKey()) { // Left Left case
-            rightRotation();
-        } else if (depth_difference < -1 && key > node.getRightNode().getKey()) { // Right Right case
-            leftRotation();
-        } else if (depth_difference > 1 && key > node.getLeftNode().getKey()) { //Left Right case
-            leftRightRotation();
-        } else if (depth_difference < -1 && key < node.getRightNode().getKey()) { // Right Left case
-            rightLeftRotation();
+    public void balanceTreeAfterInsertion(int key, AVLNode<T> node, int heightDifference) {
+        if (heightDifference > 1) {
+            if (key < node.getLeftNode().getKey()) {
+                rightRotation();
+            } else {
+                leftRightRotation();
+            }
+        } else {
+            if (key > node.getRightNode().getKey()) {
+                leftRotation();
+            } else {
+                rightLeftRotation();
+            }
         }
     }
 
-    public void balanceTreeAfterDeletion(AVLNode<T> node) {
-        int depth_difference = getDepthDifference(node);
-        if (depth_difference > 1 && getDepthDifference((AVLNode<T>) node.getLeftNode()) >= 0) { // Left Left case
-            rightRotation();
-        } else if (depth_difference < -1 && getDepthDifference((AVLNode<T>) node.getRightNode()) <= 0) { // Right Right case
-            leftRotation();
-        } else if (depth_difference > 1 && getDepthDifference((AVLNode<T>) node.getLeftNode()) < 0) { //Left Right case
-            leftRightRotation();
-        } else if (depth_difference < -1 && getDepthDifference((AVLNode<T>) node.getRightNode()) > 0) { // Right Left case
-            rightLeftRotation();
+    public void balanceTreeAfterDeletion(AVLNode<T> node, int heightDifference) {
+        AVLNode<T> originalPosition = (AVLNode<T>) current;
+        current = node;
+        if (heightDifference > 1) {
+            if (getHeightDifference((AVLNode<T>) node.getLeftNode()) >= 0) {
+                rightRotation();
+            } else {
+                leftRightRotation();
+            }
+        } else {
+            if (getHeightDifference((AVLNode<T>) node.getRightNode()) <= 0) {
+                leftRotation();
+            } else {
+                rightLeftRotation();
+            }
         }
+        current = originalPosition;
     }
 
-    public void AVLinsert(int insert_key, T value) {
+    public void insert(int insert_key, T value) {
         if (root == null) {
             AVLNode<T> node = new AVLNode<T>(insert_key, value, 0);
             root = current = node;
@@ -83,7 +92,7 @@ public class AVLtree<T> extends BinarySearchTree<T> {
                 setRight(node, current);
             } else {
                 moveToRightNode();
-                AVLinsert(insert_key, value);
+                insert(insert_key, value);
                 moveToParentNode();
             }
         } else if (current.getKey() > insert_key) {
@@ -92,31 +101,62 @@ public class AVLtree<T> extends BinarySearchTree<T> {
                 setLeft(node, current);
             } else {
                 moveToLeftNode();
-                AVLinsert(insert_key, value);
+                insert(insert_key, value);
                 moveToParentNode();
             }
         }
         updateHeight((AVLNode<T>) current);
-        balanceTreeAfterInsertion(insert_key, (AVLNode<T>) current);
+
+        int heightDifference = getHeightDifference((AVLNode<T>) current);
+        if (heightDifference > 1 || heightDifference < -1) {
+            balanceTreeAfterInsertion(insert_key, (AVLNode<T>) current, heightDifference);
+        }
     }
 
-    public void AVLdelete(int delete_key) {
-        // perform standard bst deletion
+    protected void updateHeightAfterDeletion(AVLNode<T> node) {
+        assert node == null : "Height of null node cannot be updated";
+
+        while (node != null) {
+            updateHeight(node);
+            int heightDifference = getHeightDifference((AVLNode<T>) node);
+            if (heightDifference > 1 || heightDifference < -1) {
+                balanceTreeAfterDeletion((AVLNode<T>) node, heightDifference);
+            }
+            node = (AVLNode<T>) node.getParentNode();
+        }
+    }
+
+    public void delete(int delete_key) {
         AVLNode<T> deleteNode = (AVLNode<T>) getNode(delete_key);
         if (deleteNode == null) return;
-        // If target node is a leaf node, move the pointer to parent node before deletion
-        if (deleteNode.getLeftNode() == null && deleteNode.getRightNode() == null) {
-            deleteNode = (AVLNode<T>) deleteNode.getParentNode();
-        }
-        delete(delete_key);
-        if (deleteNode.getParentNode() == null) {
-            updateHeight(deleteNode);
-            balanceTreeAfterDeletion((AVLNode<T>) deleteNode);
-        }
-        while (deleteNode.getParentNode() != null) {
-            updateHeight(deleteNode);
-            balanceTreeAfterDeletion((AVLNode<T>) deleteNode);
-            deleteNode = (AVLNode<T>) deleteNode.getParentNode();
+
+        AVLNode<T> successor = (AVLNode<T>) getSuccessor(deleteNode);
+        if (successor == null) {
+            AVLNode<T> predecessor = (AVLNode<T>) getPredecessor(deleteNode);
+            if (predecessor == null) {
+                // success and predecessor do not exist
+
+                AVLNode<T> parent_node = (AVLNode<T>) deleteNode.getParentNode();
+                if (parent_node == null) {
+                    root = null;
+                    current = null;
+                } else {
+                    int parent_key = parent_node.getKey();
+                    if (delete_key < parent_key) {
+                        parent_node.setLeftNode(null);
+                        updateHeightAfterDeletion(parent_node);
+                    } else {
+                        parent_node.setRightNode(null);
+                        updateHeightAfterDeletion(parent_node);
+                    }
+                }
+            } else {
+                swapWithPredecessor(deleteNode, predecessor);
+                updateHeightAfterDeletion((AVLNode<T>) predecessor.getParentNode());
+            }
+        } else {
+            swapWithSuccessor(deleteNode, successor);
+            updateHeightAfterDeletion((AVLNode<T>) successor.getParentNode());
         }
     }
 

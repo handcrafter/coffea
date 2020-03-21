@@ -88,7 +88,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         return node;
     }
 
-    private void swapWithSuccessor(BinaryNode<T> deleteNode, BinaryNode<T> successor) {
+    protected void swapWithSuccessor(BinaryNode<T> deleteNode, BinaryNode<T> successor) {
         deleteNode.setKey(successor.getKey());
         deleteNode.setValue(successor.getValue());
 
@@ -111,7 +111,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         }
     }
 
-    public void swapWithPredecessor(BinaryNode<T> deleteNode, BinaryNode<T> predecessor) {
+    protected void swapWithPredecessor(BinaryNode<T> deleteNode, BinaryNode<T> predecessor) {
         deleteNode.setKey(predecessor.getKey());
         deleteNode.setValue(predecessor.getValue());
 

@@ -1,7 +1,7 @@
 package Node;
 
 
-public class AVLNode<T> extends BinaryNode {
+public class AVLNode<T> extends BinaryNode<T> {
     private int height;
 
     public AVLNode() {
@@ -20,4 +20,7 @@ public class AVLNode<T> extends BinaryNode {
     public int getHeight() {
         return this.height;
     }
+
+    @Override
+    public void print() { System.out.print("(Key: " + key + ", value: " + value + ", height: " + height + ") "); }
 }
