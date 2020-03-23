@@ -172,16 +172,17 @@ public class AVLTree<T> extends BinarySearchTree<T> {
             linkNodes(current, null, 'L');
         }
 
-        if (current.getParentNode() != null) {
-            if (current == current.getParentNode().getLeftNode()) {
-                linkNodes(current.getParentNode(), newRoot, 'L');
+        AVLNode<T> parentNode = (AVLNode<T>) current.getParentNode();
+        if (parentNode != null) {
+            if (current == parentNode.getLeftNode()) {
+                linkNodes(parentNode, newRoot, 'L');
             } else {
-                linkNodes(current.getParentNode(), newRoot, 'R');
+                linkNodes(parentNode, newRoot, 'R');
             }
         }
 
         newRoot.setRightNode(current);
-        newRoot.setParentNode(current.getParentNode());
+        newRoot.setParentNode(parentNode);
         current.setParentNode(newRoot);
 
         if (current.getLeftNode() != null) {
@@ -192,7 +193,7 @@ public class AVLTree<T> extends BinarySearchTree<T> {
         updateHeight(newRoot);
         current = newRoot;
 
-        if (current.getParentNode() == null) {
+        if (parentNode == null) {
             root = current;
         }
     }
@@ -206,15 +207,16 @@ public class AVLTree<T> extends BinarySearchTree<T> {
             linkNodes(current, null, 'R');
         }
 
-        if (current.getParentNode() != null) {
-            if (current == current.getParentNode().getLeftNode()) {
-                linkNodes(current.getParentNode(), newRoot, 'L');
+        AVLNode<T> parentNode = (AVLNode<T>) current.getParentNode();
+        if (parentNode != null) {
+            if (current == parentNode.getLeftNode()) {
+                linkNodes(parentNode, newRoot, 'L');
             } else {
-                linkNodes(current.getParentNode(), newRoot, 'R');
+                linkNodes(parentNode, newRoot, 'R');
             }
         }
         newRoot.setLeftNode(current);
-        newRoot.setParentNode(current.getParentNode());
+        newRoot.setParentNode(parentNode);
         current.setParentNode(newRoot);
 
         if (current.getRightNode() != null) {
@@ -225,7 +227,7 @@ public class AVLTree<T> extends BinarySearchTree<T> {
         updateHeight(newRoot);
         current = newRoot;
 
-        if (current.getParentNode() == null) {
+        if (parentNode == null) {
             root = current;
         }
     }

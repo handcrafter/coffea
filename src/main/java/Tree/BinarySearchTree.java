@@ -73,7 +73,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
                 node = node.getLeftNode();
             }
         } else {
-            return null;
+            node = null;
         }
         return node;
     }
@@ -87,7 +87,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
                 node = node.getRightNode();
             }
         } else {
-            return null;
+            node = null;
         }
         return node;
     }
