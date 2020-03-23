@@ -89,7 +89,7 @@ public class AVLTree<T> extends BinarySearchTree<T> {
         } if (current.getKey() < insert_key) {
             if (current.getRightNode() == null) {
                 AVLNode<T> node = new AVLNode<T>(insert_key, value, 0);
-                setRight(node, current);
+                linkNodes(current, node, 'R');
             } else {
                 moveToRightNode();
                 insert(insert_key, value);
@@ -98,7 +98,7 @@ public class AVLTree<T> extends BinarySearchTree<T> {
         } else if (current.getKey() > insert_key) {
             if (current.getLeftNode() == null) {
                 AVLNode<T> node = new AVLNode<T>(insert_key, value, 0);
-                setLeft(node, current);
+                linkNodes(current, node, 'L');
             } else {
                 moveToLeftNode();
                 insert(insert_key, value);
@@ -114,7 +114,7 @@ public class AVLTree<T> extends BinarySearchTree<T> {
     }
 
     protected void updateHeightAfterDeletion(AVLNode<T> node) {
-        assert node == null : "Height of null node cannot be updated";
+        assert node == null : "Input node must not be null";
 
         while (node != null) {
             updateHeight(node);
@@ -128,6 +128,8 @@ public class AVLTree<T> extends BinarySearchTree<T> {
 
     public void delete(int delete_key) {
         AVLNode<T> deleteNode = (AVLNode<T>) getNode(delete_key);
+        AVLNode<T> nodeToUpdate = null;
+
         if (deleteNode == null) return;
 
         AVLNode<T> successor = (AVLNode<T>) getSuccessor(deleteNode);
@@ -144,36 +146,37 @@ public class AVLTree<T> extends BinarySearchTree<T> {
                     int parent_key = parent_node.getKey();
                     if (delete_key < parent_key) {
                         parent_node.setLeftNode(null);
-                        updateHeightAfterDeletion(parent_node);
+                        nodeToUpdate = parent_node;
                     } else {
                         parent_node.setRightNode(null);
-                        updateHeightAfterDeletion(parent_node);
+                        nodeToUpdate = parent_node;
                     }
                 }
             } else {
                 swapWithPredecessor(deleteNode, predecessor);
-                updateHeightAfterDeletion((AVLNode<T>) predecessor.getParentNode());
+                nodeToUpdate = (AVLNode<T>) predecessor.getParentNode();
             }
         } else {
             swapWithSuccessor(deleteNode, successor);
-            updateHeightAfterDeletion((AVLNode<T>) successor.getParentNode());
+            nodeToUpdate = (AVLNode<T>) successor.getParentNode();
         }
+        updateHeightAfterDeletion(nodeToUpdate);
     }
 
     protected void rightRotation() {
         AVLNode<T> newRoot = (AVLNode<T>) current.getLeftNode();
 
         if (newRoot.getRightNode() != null) {
-            current.setLeftNode(newRoot.getRightNode());
+            linkNodes(current, newRoot.getRightNode(), 'L');
         } else {
-            current.setLeftNode(null);
+            linkNodes(current, null, 'L');
         }
 
         if (current.getParentNode() != null) {
             if (current == current.getParentNode().getLeftNode()) {
-                current.getParentNode().setLeftNode(newRoot);
+                linkNodes(current.getParentNode(), newRoot, 'L');
             } else {
-                current.getParentNode().setRightNode(newRoot);
+                linkNodes(current.getParentNode(), newRoot, 'R');
             }
         }
 
@@ -198,16 +201,16 @@ public class AVLTree<T> extends BinarySearchTree<T> {
         AVLNode<T> newRoot = (AVLNode<T>) current.getRightNode();
 
         if (newRoot.getLeftNode() != null) {
-            current.setRightNode(newRoot.getLeftNode());
+            linkNodes(current, newRoot.getLeftNode() ,'R');
         } else {
-            current.setRightNode(null);
+            linkNodes(current, null, 'R');
         }
 
         if (current.getParentNode() != null) {
             if (current == current.getParentNode().getLeftNode()) {
-                current.getParentNode().setLeftNode(newRoot);
+                linkNodes(current.getParentNode(), newRoot, 'L');
             } else {
-                current.getParentNode().setRightNode(newRoot);
+                linkNodes(current.getParentNode(), newRoot, 'R');
             }
         }
         newRoot.setLeftNode(current);

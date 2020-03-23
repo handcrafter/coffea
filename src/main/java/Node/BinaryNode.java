@@ -8,9 +8,9 @@ public class BinaryNode<T> extends Node {
     protected int key;
     private BinaryNode<T> parent, left, right;
 
-    public BinaryNode(int item, T value)
+    public BinaryNode(int key, T value)
     {
-        key = item;
+        this.key = key;
         this.value = value;
         parent = left = right = null;
     }
@@ -21,9 +21,7 @@ public class BinaryNode<T> extends Node {
         parent = left = right = null;
     }
 
-    public void setKey(int item) {
-        key = item;
-    }
+    public void setKey(int key) { this.key = key; }
 
     public void setValue(T value) { this.value = value; }
 
@@ -49,7 +47,7 @@ public class BinaryNode<T> extends Node {
 
     @Override
     public void print() {
-        System.out.print(key);
+        System.out.print("key: " + key + ", value: " + value);
     }
 
 }

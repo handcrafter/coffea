@@ -31,7 +31,7 @@ public class BinaryTree<T> extends Tree {
     }
 
     public void setRightChild(int key, T value) {
-        if (current == null) return;
+        assert current == null : "current node must not be null";
         BinaryNode<T> node = current.getRightNode();
         if (node == null) {
             node = new BinaryNode<T>();
@@ -57,18 +57,27 @@ public class BinaryTree<T> extends Tree {
         current = current.getParentNode();
     }
 
+    protected void linkNodes(BinaryNode<T> parent, BinaryNode<T> child, char lr) {
+        assert parent == null : "Parent node must not be null";
+        assert (lr == 'R' || lr == 'R') : "Input must be either R or L";
+        if (lr == 'L') {
+            parent.setLeftNode(child);
+            if (child != null) child.setParentNode(parent);
+        } else { // lr =='R'
+            parent.setRightNode(child);
+            if (child != null) child.setParentNode(parent);
+        }
+    }
+
     @Override
     public void printDFS() {
         assert current == null : "current must not be null";
-
         current.print();
-
         if (current.getLeftNode() != null) {
             moveToLeftNode();
             printDFS();
             moveToParentNode();
         }
-
         if (current.getRightNode() != null) {
             moveToRightNode();
             printDFS();
@@ -78,9 +87,8 @@ public class BinaryTree<T> extends Tree {
 
     @Override
     public void printBFS() {
-        Queue<BinaryNode<T>> queue = new LinkedList<BinaryNode<T>>() ;
         assert current == null : "current must not be null";
-
+        Queue<BinaryNode<T>> queue = new LinkedList<BinaryNode<T>>() ;
         queue.add(current);
         while (!queue.isEmpty()) {
             BinaryNode<T> node = queue.remove();
