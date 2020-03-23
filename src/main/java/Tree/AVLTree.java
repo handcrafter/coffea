@@ -1,0 +1,248 @@
+package Tree;
+
+import Node.AVLNode;
+
+
+public class AVLTree<T> extends BinarySearchTree<T> {
+
+    public AVLTree() { current = root = null; }
+
+    public AVLTree(int key, T value, int height) {
+        current = new AVLNode<T>(key, value, height);
+        root = current;
+    }
+
+    public void updateHeight(AVLNode<T> node) {
+        AVLNode<T> rightNode = (AVLNode<T>) node.getRightNode();
+        AVLNode<T> leftNode = (AVLNode<T>) node.getLeftNode();
+
+        if (leftNode == null && rightNode == null) {
+            node.setHeight(0);
+        } else if (leftNode == null && rightNode != null) {
+            node.setHeight(1 + rightNode.getHeight());
+        } else if (leftNode != null && rightNode == null) {
+            node.setHeight(1 + leftNode.getHeight());
+        } else {
+            node.setHeight(1 + Math.max(leftNode.getHeight(), rightNode.getHeight()));
+        }
+    }
+
+    public int getHeightDifference(AVLNode<T> target) {
+        AVLNode<T> rightNode = (AVLNode<T>) target.getRightNode();
+        AVLNode<T> leftNode = (AVLNode<T>) target.getLeftNode();
+
+        if (leftNode == null && rightNode == null) {
+            return 0;
+        } else if (leftNode == null && rightNode != null) {
+            return -rightNode.getHeight() - 1;
+        } else if (leftNode != null && rightNode == null) {
+            return leftNode.getHeight() + 1;
+        } else {
+            return leftNode.getHeight() - rightNode.getHeight();
+        }
+    }
+
+    public void balanceTreeAfterInsertion(int key, AVLNode<T> node, int heightDifference) {
+        if (heightDifference > 1) {
+            if (key < node.getLeftNode().getKey()) {
+                rightRotation();
+            } else {
+                leftRightRotation();
+            }
+        } else {
+            if (key > node.getRightNode().getKey()) {
+                leftRotation();
+            } else {
+                rightLeftRotation();
+            }
+        }
+    }
+
+    public void balanceTreeAfterDeletion(AVLNode<T> node, int heightDifference) {
+        AVLNode<T> originalPosition = (AVLNode<T>) current;
+        current = node;
+        if (heightDifference > 1) {
+            if (getHeightDifference((AVLNode<T>) node.getLeftNode()) >= 0) {
+                rightRotation();
+            } else {
+                leftRightRotation();
+            }
+        } else {
+            if (getHeightDifference((AVLNode<T>) node.getRightNode()) <= 0) {
+                leftRotation();
+            } else {
+                rightLeftRotation();
+            }
+        }
+        current = originalPosition;
+    }
+
+    public void insert(int insert_key, T value) {
+        if (root == null) {
+            AVLNode<T> node = new AVLNode<T>(insert_key, value, 0);
+            root = current = node;
+            return;
+        }
+
+        if (current.getKey() == insert_key) {
+          current.setValue(value);
+        } if (current.getKey() < insert_key) {
+            if (current.getRightNode() == null) {
+                AVLNode<T> node = new AVLNode<T>(insert_key, value, 0);
+                linkNodes(current, node, 'R');
+            } else {
+                moveToRightNode();
+                insert(insert_key, value);
+                moveToParentNode();
+            }
+        } else if (current.getKey() > insert_key) {
+            if (current.getLeftNode() == null) {
+                AVLNode<T> node = new AVLNode<T>(insert_key, value, 0);
+                linkNodes(current, node, 'L');
+            } else {
+                moveToLeftNode();
+                insert(insert_key, value);
+                moveToParentNode();
+            }
+        }
+        updateHeight((AVLNode<T>) current);
+
+        int heightDifference = getHeightDifference((AVLNode<T>) current);
+        if (heightDifference > 1 || heightDifference < -1) {
+            balanceTreeAfterInsertion(insert_key, (AVLNode<T>) current, heightDifference);
+        }
+    }
+
+    protected void updateHeightAfterDeletion(AVLNode<T> node) {
+        assert node == null : "Input node must not be null";
+
+        while (node != null) {
+            updateHeight(node);
+            int heightDifference = getHeightDifference((AVLNode<T>) node);
+            if (heightDifference > 1 || heightDifference < -1) {
+                balanceTreeAfterDeletion((AVLNode<T>) node, heightDifference);
+            }
+            node = (AVLNode<T>) node.getParentNode();
+        }
+    }
+
+    public void delete(int delete_key) {
+        AVLNode<T> deleteNode = (AVLNode<T>) getNode(delete_key);
+        AVLNode<T> nodeToUpdate = null;
+
+        if (deleteNode == null) return;
+
+        AVLNode<T> successor = (AVLNode<T>) getSuccessor(deleteNode);
+        if (successor == null) {
+            AVLNode<T> predecessor = (AVLNode<T>) getPredecessor(deleteNode);
+            if (predecessor == null) {
+                // success and predecessor do not exist
+
+                AVLNode<T> parent_node = (AVLNode<T>) deleteNode.getParentNode();
+                if (parent_node == null) {
+                    root = null;
+                    current = null;
+                } else {
+                    int parent_key = parent_node.getKey();
+                    if (delete_key < parent_key) {
+                        parent_node.setLeftNode(null);
+                        nodeToUpdate = parent_node;
+                    } else {
+                        parent_node.setRightNode(null);
+                        nodeToUpdate = parent_node;
+                    }
+                }
+            } else {
+                swapWithPredecessor(deleteNode, predecessor);
+                nodeToUpdate = (AVLNode<T>) predecessor.getParentNode();
+            }
+        } else {
+            swapWithSuccessor(deleteNode, successor);
+            nodeToUpdate = (AVLNode<T>) successor.getParentNode();
+        }
+        updateHeightAfterDeletion(nodeToUpdate);
+    }
+
+    protected void rightRotation() {
+        AVLNode<T> newRoot = (AVLNode<T>) current.getLeftNode();
+
+        if (newRoot.getRightNode() != null) {
+            linkNodes(current, newRoot.getRightNode(), 'L');
+        } else {
+            linkNodes(current, null, 'L');
+        }
+
+        AVLNode<T> parentNode = (AVLNode<T>) current.getParentNode();
+        if (parentNode != null) {
+            if (current == parentNode.getLeftNode()) {
+                linkNodes(parentNode, newRoot, 'L');
+            } else {
+                linkNodes(parentNode, newRoot, 'R');
+            }
+        }
+
+        newRoot.setRightNode(current);
+        newRoot.setParentNode(parentNode);
+        current.setParentNode(newRoot);
+
+        if (current.getLeftNode() != null) {
+            current.getLeftNode().setParentNode(current);
+        }
+
+        updateHeight((AVLNode<T>) current);
+        updateHeight(newRoot);
+        current = newRoot;
+
+        if (parentNode == null) {
+            root = current;
+        }
+    }
+
+    protected void leftRotation() {
+        AVLNode<T> newRoot = (AVLNode<T>) current.getRightNode();
+
+        if (newRoot.getLeftNode() != null) {
+            linkNodes(current, newRoot.getLeftNode() ,'R');
+        } else {
+            linkNodes(current, null, 'R');
+        }
+
+        AVLNode<T> parentNode = (AVLNode<T>) current.getParentNode();
+        if (parentNode != null) {
+            if (current == parentNode.getLeftNode()) {
+                linkNodes(parentNode, newRoot, 'L');
+            } else {
+                linkNodes(parentNode, newRoot, 'R');
+            }
+        }
+        newRoot.setLeftNode(current);
+        newRoot.setParentNode(parentNode);
+        current.setParentNode(newRoot);
+
+        if (current.getRightNode() != null) {
+            current.getRightNode().setParentNode(current);
+        }
+
+        updateHeight((AVLNode<T>) current);
+        updateHeight(newRoot);
+        current = newRoot;
+
+        if (parentNode == null) {
+            root = current;
+        }
+    }
+
+    protected void leftRightRotation() {
+        moveToLeftNode();
+        leftRotation();
+        moveToParentNode();
+        rightRotation();
+    }
+
+    protected void rightLeftRotation() {
+        moveToRightNode();
+        rightRotation();
+        moveToParentNode();
+        leftRotation();
+    }
+}

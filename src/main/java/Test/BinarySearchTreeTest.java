@@ -57,15 +57,22 @@ public class BinarySearchTreeTest {
         *   14578101115
         */
 
-        BinarySearchTree<String> bsTree = new BinarySearchTree(5, null);
+        BinarySearchTree<String> bsTree = new BinarySearchTree(5, "5");
         // Insert a node
-        bsTree.insert(2, null);
-        bsTree.insert(1, null);
-        bsTree.insert(7, null);
-        bsTree.insert(3, null);
-        bsTree.insert(4, null);
-        bsTree.insert(9, null);
-        bsTree.insert(6, null);
+        System.out.println("Left Insertion, expected: 5 2 1");
+        bsTree.insert(2, "2");
+        bsTree.insert(1, "1");
+        bsTree.printBFS();
+        System.out.println("Right Insertion, expected: 5 2 7 1");
+        bsTree.insert(7, "7");
+        bsTree.printBFS();
+        System.out.println("Left-Right Insertion, expected: 5 2 7 1 3 4");
+        bsTree.insert(3, "3");
+        bsTree.insert(4, "4");
+        bsTree.printBFS();
+        System.out.println("Left-Right Insertion, expected: 5 2 7 1 3 6 9 4");
+        bsTree.insert(9, "9");
+        bsTree.insert(6, "6");
         bsTree.printBFS();
 
         // Search for key

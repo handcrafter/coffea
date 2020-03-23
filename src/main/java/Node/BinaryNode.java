@@ -4,8 +4,8 @@ import Base.Node;
 
 
 public class BinaryNode<T> extends Node {
-    private T value;
-    private int key;
+    protected T value;
+    protected int key;
     private BinaryNode<T> parent, left, right;
 
     public BinaryNode(int key, T value)
