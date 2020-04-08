@@ -49,7 +49,7 @@ public class WeightBalancedTree<T> extends BinarySearchTree<T> {
     }
 
     public void delete(int key) {
-        deleteKey(key, (WeightBalancedNode<T>) current);
+        deleteKey(key, (WeightBalancedNode<T>) root);
         current = root;
     }
 
@@ -64,7 +64,7 @@ public class WeightBalancedTree<T> extends BinarySearchTree<T> {
         WeightBalancedNode<T> left = (WeightBalancedNode) deleteNode.getLeftNode();
         WeightBalancedNode<T> parent = (WeightBalancedNode) deleteNode.getParentNode();
 
-        WeightBalancedNode<T> replacer = null;
+        WeightBalancedNode<T> replacement = null;
         // Deleting a node with no children
         if (left == null && right == null) {
             if (parent == null) { // deleting the only node
@@ -77,22 +77,22 @@ public class WeightBalancedTree<T> extends BinarySearchTree<T> {
                 parent.setLeftNode(null);
             }
         } else if (left == null && right != null) { // Deleting a node with one child
-            replacer = right;
+            replacement = right;
         } else if (left != null && right == null) {
-            replacer = left;
+            replacement = left;
         } else { // Deleting a node with two children
             deleteTwoChildrenNode(deleteNode);
         }
 
-        if (replacer != null) {
+        if (replacement != null) {
             if (parent == null) { // Removing a root node
-                replacer.setParentNode(null);
-                root = replacer;
+                replacement.setParentNode(null);
+                root = replacement;
             } else {
-                if (parent.getKey() < replacer.getKey()) {
-                    linkNodes(parent, replacer, 'R');
+                if (parent.getKey() < replacement.getKey()) {
+                    linkNodes(parent, replacement, 'R');
                 } else {
-                    linkNodes(parent, replacer, 'L');
+                    linkNodes(parent, replacement, 'L');
                 }
             }
         }
