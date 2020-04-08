@@ -6,6 +6,7 @@ import Base.Node;
 public class TernaryNode<T> extends Node {
     protected T value;
     protected int key;
+    protected int size;
 
     private TernaryNode<T> parent, left, middle, right;
 
@@ -13,6 +14,7 @@ public class TernaryNode<T> extends Node {
         this.key = key;
         this.value = value;
         parent = left = right = middle = null;
+        size = 1;
     }
 
     public TernaryNode() {
@@ -23,6 +25,8 @@ public class TernaryNode<T> extends Node {
     public void setKey(int key) { this.key = key; }
 
     public void setValue(T value) { this.value = value; }
+
+    public void setSize(int size) { this.size = size; }
 
     public void setLeftNode(TernaryNode<T> node) {
         left = node;
@@ -38,6 +42,8 @@ public class TernaryNode<T> extends Node {
 
     public void setParentNode(TernaryNode<T> node) { parent = node; };
 
+    public boolean isFull() { return (left != null && middle != null && right != null); }
+
     public int getKey() { return key; }
 
     public T getValue() { return value; }
@@ -49,6 +55,8 @@ public class TernaryNode<T> extends Node {
     public TernaryNode<T> getMiddleNode() { return middle; }
 
     public TernaryNode<T> getParentNode() { return parent; }
+
+    public int getSize() { return size; }
 
     @Override
     public void print() { System.out.print("(key: " + key + ", value: " + value + ") "); }

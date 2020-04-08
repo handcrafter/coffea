@@ -30,7 +30,7 @@ public class TernaryTree<T> extends Tree {
 
     protected void moveToMiddleNode() {
         assert current == null : "current must not be null";
-        current = current.getRightNode();
+        current = current.getMiddleNode();
     }
 
     protected void moveToParentNode() {
@@ -58,23 +58,17 @@ public class TernaryTree<T> extends Tree {
         TernaryNode<T> originalPosition = current;
         current = root;
 
-        while (true) {
-            if (current.getKey() == key) {
-                result = current;
+        Queue<TernaryNode<T>> queue = new LinkedList<TernaryNode<T>>() ;
+        queue.add(current);
+        while (!queue.isEmpty()) {
+            TernaryNode<T> node = queue.remove();
+            if (node.getKey() == key) {
+                result = node;
                 break;
-            } else if (current.getKey() < key) {
-                if (current.getRightNode() != null) {
-                    moveToRightNode();
-                } else {
-                    break;
-                }
-            } else if (current.getKey() > key) {
-                if (current.getLeftNode() != null) {
-                    moveToLeftNode();
-                } else {
-                    break;
-                }
             }
+            if (node.getLeftNode() != null) queue.add(node.getLeftNode());
+            if (node.getMiddleNode() != null) queue.add(node.getMiddleNode());
+            if (node.getRightNode() != null) queue.add(node.getRightNode());
         }
 
         current = originalPosition;
@@ -87,38 +81,72 @@ public class TernaryTree<T> extends Tree {
     }
 
     public void insert(int insertKey, T value) {
-        if (current == null) {
+        if (root == null) {
             TernaryNode<T> node = new TernaryNode<T>(insertKey, value);
-            current = node;
+            root = current = node;
         }
-        TernaryNode<T> originalPosition = current;
 
+        TernaryNode<T> originalPosition = current;
+        current = root;
         while (true) {
             TernaryNode<T> left = current.getLeftNode();
             TernaryNode<T> right = current.getRightNode();
             TernaryNode<T> middle = current.getMiddleNode();
 
-            if (left == null) {
-                TernaryNode<T> node = new TernaryNode<T>(insertKey, value);
-                linkNodes(current, node, 'L');
-                break;
-            } else if (middle == null) {
-                TernaryNode<T> node = new TernaryNode<T>(insertKey, value);
-                linkNodes(current, node, 'M');
-                break;
-            } else if (right == null) {
-                TernaryNode<T> node = new TernaryNode<T>(insertKey, value);
-                linkNodes(current, node, 'R');
-                break;
-            } else if (left != null) {
-                current = current.getLeftNode();
-            } else if (middle != null) {
-                current = current.getMiddleNode();
-            } else if (right != null) {
-                current = current.getRightNode();
+            if (!current.isFull()) {
+                if (left == null) {
+                    TernaryNode<T> node = new TernaryNode<T>(insertKey, value);
+                    linkNodes(current, node, 'L');
+                    updateSize(node);
+                    break;
+                } else if (middle == null) {
+                    TernaryNode<T> node = new TernaryNode<T>(insertKey, value);
+                    linkNodes(current, node, 'M');
+                    updateSize(node);
+                    break;
+                } else if (right == null) {
+                    TernaryNode<T> node = new TernaryNode<T>(insertKey, value);
+                    linkNodes(current, node, 'R');
+                    updateSize(node);
+                    break;
+                }
+            } else {
+                if (left.getSize() > middle.getSize()) {
+                    moveToMiddleNode();
+                } else if (middle.getSize() > right.getSize()) {
+                    moveToRightNode();
+                } else {
+                    moveToLeftNode();
+                }
             }
+
         }
         current = originalPosition;
+    }
+
+    private void updateSize(TernaryNode<T> node) {
+
+        TernaryNode<T> originalPosition = node;
+        while (node != null) {
+            TernaryNode<T> left = node.getLeftNode();
+            TernaryNode<T> right = node.getRightNode();
+            TernaryNode<T> middle = node.getMiddleNode();
+            int size = 0;
+            if (node.isFull()) {
+                size = left.getSize()+middle.getSize()+right.getSize()+1;
+            } else {
+                if (left == null) {
+                    size = 1;
+                } else if (middle == null) {
+                    size = left.getSize() + 1;
+                } else if (right == null) {
+                    size = left.getSize() + middle.getSize() + 1;
+                }
+            }
+            node.setSize(size);
+            node = node.getParentNode();
+        }
+        node = originalPosition;
     }
 
     @Override
