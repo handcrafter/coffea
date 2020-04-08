@@ -5,58 +5,57 @@ import Node.BinaryNode;
 
 public class CartesianTree<T> extends BinaryTree<T> {
     int[] sequence;
-    int length;
+    boolean maxHeap;
 
     public CartesianTree() { current = null; }
 
-    public CartesianTree(int[] sequence, int length) {
-        current = null;
+    public CartesianTree(int[] sequence, boolean maxHeap) {
         this.sequence = sequence;
-        this.length = length;
+        this.maxHeap = maxHeap;
+        current = constructTree(0, sequence.length-1);
     }
 
-    public void heapTree(Boolean maxHeap) { current = buildHeapTree(this.sequence, 0, length-1, maxHeap); }
-
-    protected BinaryNode<T> buildHeapTree(int[] seq, int begin, int end, Boolean isMaxHeap) {
+    public BinaryNode<T> constructTree(int begin, int end) {
         if (begin > end) return null;
         BinaryNode<T> node = null;
         int index = 0;
-        Boolean isMax = false;
 
-        if (isMaxHeap) {
-            index = maxOrMin(seq, begin, end, true);
-            node = new BinaryNode<T>(seq[index], null);
-            isMax = true;
+        if (maxHeap) {
+            index = maxIndex(begin, end);
+            node = new BinaryNode<T>(sequence[index], null);
         } else {
-            index = maxOrMin(seq, begin, end, false);
-            node = new BinaryNode<T>(seq[index], null);
+            index = minIndex(begin, end);
+            node = new BinaryNode<T>(sequence[index], null);
         }
 
         if (begin == end) return node;
 
-        linkNodes(node, buildHeapTree(seq, begin, index-1, isMax), 'L');
-        if (node.getLeftNode() != null) { node.getLeftNode().setParentNode(node); }
+        linkNodes(node, constructTree(begin, index-1), 'L');
 
-        linkNodes(node, buildHeapTree(seq, index+1, end, isMax), 'R');
-        if (node.getRightNode() != null) { node.getRightNode().setParentNode(node); }
+        linkNodes(node, constructTree(index+1, end), 'R');
 
         return node;
     }
 
-    protected int maxOrMin(int[] seq, int begin, int end, boolean max) {
-        int peekPoint = seq[begin];
+    private int maxIndex(int begin, int end) {
+        int maxPoint = sequence[begin];
         int index = begin;
         for (int i = begin; i <= end; i++) {
-            if (max) {
-                if (peekPoint < seq[i]) {
-                    peekPoint = seq[i];
-                    index = i;
-                }
-            } else {
-                if (peekPoint > seq[i]) {
-                    peekPoint = seq[i];
-                    index = i;
-                }
+            if (maxPoint < sequence[i]) {
+                maxPoint = sequence[i];
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    private int minIndex(int begin, int end) {
+        int minPoint = sequence[begin];
+        int index = begin;
+        for (int i = begin; i <= end; i++) {
+            if (minPoint > sequence[i]) {
+                minPoint = sequence[i];
+                index = i;
             }
         }
         return index;

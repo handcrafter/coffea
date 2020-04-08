@@ -26,14 +26,12 @@ public class CartesianTreeTest {
 
         System.out.println("MaxHeap Example");
         int[] a = {3,4,5,2,8,11,7};
-        CartesianTree<String> ct = new CartesianTree(a, a.length );
-        ct.heapTree(true);
+        CartesianTree<String> ct = new CartesianTree(a,true);
         ct.printInOrder();
 
         System.out.println("\n"+"MinHeap Example");
         int[] b = {5,4,3,9,5,6,1,2};
-        CartesianTree<String> cts = new CartesianTree(b, b.length);
-        cts.heapTree(false);
+        CartesianTree<String> cts = new CartesianTree(b,false);
         cts.printInOrder();
     }
 }
