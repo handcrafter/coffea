@@ -47,7 +47,7 @@ public class BinaryNode<T> extends Node {
 
     @Override
     public void print() {
-        System.out.print("key: " + key + ", value: " + value);
+        System.out.print("(key: " + key + ", value: " + value + ") ");
     }
 
 }
