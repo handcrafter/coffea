@@ -21,10 +21,10 @@ public class CartesianTree<T> extends BinaryTree<T> {
         int index = 0;
 
         if (maxHeap) {
-            index = maxIndex(begin, end);
+            index = getMaxIndex(begin, end);
             node = new BinaryNode<T>(sequence[index], null);
         } else {
-            index = minIndex(begin, end);
+            index = getMinIndex(begin, end);
             node = new BinaryNode<T>(sequence[index], null);
         }
 
@@ -37,7 +37,7 @@ public class CartesianTree<T> extends BinaryTree<T> {
         return node;
     }
 
-    private int maxIndex(int begin, int end) {
+    private int getMaxIndex(int begin, int end) {
         int maxPoint = sequence[begin];
         int index = begin;
         for (int i = begin; i <= end; i++) {
@@ -49,7 +49,7 @@ public class CartesianTree<T> extends BinaryTree<T> {
         return index;
     }
 
-    private int minIndex(int begin, int end) {
+    private int getMinIndex(int begin, int end) {
         int minPoint = sequence[begin];
         int index = begin;
         for (int i = begin; i <= end; i++) {
