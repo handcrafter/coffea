@@ -107,7 +107,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
                 linkNodes(parent, successor.getRightNode(), 'R');
             }
         } else {
-            if (successor.getKey() < parent.getKey()) {
+            if (successor.getKey() < parent.getKey() || successor == parent.getLeftNode()) {
                 successor.getParentNode().setLeftNode(null);
             } else {
                 successor.getParentNode().setRightNode(null);
@@ -127,7 +127,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
                 linkNodes(parent, predecessor.getLeftNode(), 'R');
             }
         } else {
-            if (predecessor.getKey() < parent.getKey()) {
+            if (predecessor.getKey() < parent.getKey() || predecessor == parent.getLeftNode()) {
                 parent.setLeftNode(null);
             } else {
                 parent.setRightNode(null);

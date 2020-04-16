@@ -1,7 +1,7 @@
 package Test;
 
-
 import Tree.RedBlackTree;
+
 
 public class RedBlackTreeTest {
     public static void main(String[] args) {
@@ -50,15 +50,15 @@ public class RedBlackTreeTest {
         rb.insert(25, null);
         rb.printBFS();
         System.out.println("\n" + "Delete 50, expected output : 20 10 30 25 40");
-        //rb.delete(50);
-        //rb.printBFS();
-        System.out.println("\n" + "Delete 20, expected output : 25 10 40 30 50");
-        //rb.delete(20);
-        //rb.printBFS();
-        System.out.println("\n" + "Delete 10, expected output : 40 25 50 20 30");
-        //rb.delete(10);
-        //rb.printBFS();
-        System.out.println("\n" + "Delete 40, expected output : 20 10 30 25 50");
+        rb.delete(50);
+        rb.printBFS();
+        System.out.println("\n" + "Delete 20, expected output : 25 10 30 40");
+        rb.delete(20);
+        rb.printBFS();
+        System.out.println("\n" + "Delete 10, expected output : 30 25 40");
+        rb.delete(10);
+        rb.printBFS();
+        System.out.println("\n" + "Delete 40, expected output : 30 25");
         rb.delete(40);
         rb.printBFS();
 
@@ -69,7 +69,13 @@ public class RedBlackTreeTest {
         rbt.insert(2, null);
         rbt.insert(7, null);
         rbt.insert(1, null);
-        //rbt.delete(5);
+        rbt.delete(3);
+        rbt.printBFS();
+        System.out.println();
+        rbt.delete(2);
+        rbt.printBFS();
+        System.out.println();
+        rbt.delete(7);
         rbt.printBFS();
     }
 }

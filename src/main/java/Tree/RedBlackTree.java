@@ -1,19 +1,13 @@
 package Tree;
 
 
-import Node.BinaryNode;
 import Node.RedBlackNode;
 
 public class RedBlackTree<T> extends BinarySearchTree<T> {
 
     public RedBlackTree() { current = root = null;}
 
-    public RedBlackTree(int key, T value) {
-        current = new RedBlackNode<T>(key, value, true);
-        root = (RedBlackNode<T>) current;
-    }
-
-    public RedBlackNode<T> getGrandParent(RedBlackNode<T> node) {
+    private RedBlackNode<T> getGrandParent(RedBlackNode<T> node) {
         if (node == null || node.getParentNode() == null || node.getParentNode().getParentNode() == null) {
             return null;
         } else {
@@ -21,7 +15,7 @@ public class RedBlackTree<T> extends BinarySearchTree<T> {
         }
     }
 
-    public RedBlackNode<T> getUncle(RedBlackNode<T> node) {
+    private RedBlackNode<T> getUncle(RedBlackNode<T> node) {
         RedBlackNode<T> gp = getGrandParent(node);
         RedBlackNode<T> uncle = null;
         if (gp == null) return null;
@@ -34,21 +28,18 @@ public class RedBlackTree<T> extends BinarySearchTree<T> {
         return uncle;
     }
 
-    public RedBlackNode<T> getSibling(RedBlackNode<T> node) {
+    private RedBlackNode<T> getSibling(RedBlackNode<T> node) {
         RedBlackNode<T> sibling = null;
         RedBlackNode<T> parent = (RedBlackNode<T>) node.getParentNode();
-        assert (node == null || parent == null) : "node and parent must not be null";
+        assert (node != null) : "node must not be null";
 
-        if (node.getKey() < parent.getKey()) {
-            sibling = (RedBlackNode<T>) parent.getRightNode();
-        } else if (node.getKey() > parent.getKey()){
-            sibling = (RedBlackNode<T>) parent.getLeftNode();
-        }
-        else {
-            if (parent.getLeftNode() != null) {
-                sibling = (RedBlackNode<T>) parent.getLeftNode();
-            } else if (parent.getRightNode() != null) {
+        if (parent == null) {
+            sibling = null;
+        } else {
+            if (node.getKey() < parent.getKey()) {
                 sibling = (RedBlackNode<T>) parent.getRightNode();
+            } else {
+                sibling = (RedBlackNode<T>) parent.getLeftNode();
             }
         }
         return sibling;
@@ -58,11 +49,11 @@ public class RedBlackTree<T> extends BinarySearchTree<T> {
         if (root == null) {
             RedBlackNode<T> node = new RedBlackNode<T>(insert_key, value, true);
             current = node;
-            root = (RedBlackNode<T>) current;
+            root = current;
             return;
         }
 
-        RedBlackNode<T> insertedNode = null;
+        RedBlackNode<T> originalPosition = (RedBlackNode<T>) current;
         current = root;
 
         while (true) {
@@ -72,47 +63,43 @@ public class RedBlackTree<T> extends BinarySearchTree<T> {
             }
             if (current.getKey() < insert_key) {
                 if (current.getRightNode() == null) {
-                    RedBlackNode<T> node = new RedBlackNode<T>(insert_key, value, true);
+                    RedBlackNode<T> node = new RedBlackNode<T>(insert_key, value, false);
                     linkNodes(current, node, 'R');
-                    insertedNode = node;
+                    adjustTreeAfterInsert(node);
                     break;
                 } else {
                     moveToRightNode();
                 }
             } else if (current.getKey() > insert_key) {
                 if (current.getLeftNode() == null) {
-                    RedBlackNode<T> node = new RedBlackNode<T>(insert_key, value, true);
+                    RedBlackNode<T> node = new RedBlackNode<T>(insert_key, value, false);
                     linkNodes(current, node, 'L');
-                    insertedNode = node;
+                    adjustTreeAfterInsert(node);
                     break;
                 } else {
                     moveToLeftNode();
                 }
             }
         }
-        adjustAfterInsert(insertedNode);
-        current = root;
+        current = originalPosition ;
     }
 
-    public void adjustAfterInsert(RedBlackNode<T> node) {
-        assert node == null : "Input node must not be null";
-
-        // colour the node red
-        node.setColour(false);
+    private void adjustTreeAfterInsert(RedBlackNode<T> node) {
+        assert node != null : "Input node must not be null";
 
         RedBlackNode<T> gp = getGrandParent(node);
         RedBlackNode<T> parent = (RedBlackNode<T>) node.getParentNode();
         RedBlackNode<T> uncle = getUncle(node);
 
-        if (parent != null && !parent.getColour()) {
+        if (parent != null && !parent.isBlack()) { // when node is not a root and parent is red
 
-            if (uncle != null && !uncle.getColour()) {
+            if (uncle != null && !uncle.isBlack()) { // uncle exist and red
                 parent.setColour(true);
                 uncle.setColour(true);
                 gp.setColour(false);
-                adjustAfterInsert(gp);
+                adjustTreeAfterInsert(gp);
             }
-            else if (parent.getKey() < gp.getKey()) {
+            else if (parent.getKey() < gp.getKey()) { // parent is left child of grandparent and uncle is black
                 if (node.getKey() > parent.getKey()) {
                     leftRotation(parent);
                 }
@@ -120,7 +107,7 @@ public class RedBlackTree<T> extends BinarySearchTree<T> {
                 gp.setColour(false);
                 rightRotation(gp);
             }
-            else if (parent.getKey() >  gp.getKey()) {
+            else if (parent.getKey() > gp.getKey()) { // parent is right child if grandparnt and uncle is black
                 if (node.getKey() < parent.getKey()) {
                     rightRotation(parent);
                 }
@@ -129,6 +116,7 @@ public class RedBlackTree<T> extends BinarySearchTree<T> {
                 leftRotation(gp);
             }
         }
+
         RedBlackNode<T> rt = (RedBlackNode<T>) root;
         rt.setColour(true);
         root = rt;
@@ -138,14 +126,13 @@ public class RedBlackTree<T> extends BinarySearchTree<T> {
         RedBlackNode<T> deleteNode = (RedBlackNode<T>) getNode(delete_key);
         RedBlackNode<T> nodeToUpdate = deleteNode;
 
-        if (deleteNode == null) return;
+        assert (deleteNode != null) : "Delete key does not exist in the tree";
 
         RedBlackNode<T> successor = (RedBlackNode<T>) getSuccessor(deleteNode);
         if (successor == null) {
             RedBlackNode<T> predecessor = (RedBlackNode<T>) getPredecessor(deleteNode);
             if (predecessor == null) {
                 // success and predecessor do not exist
-
                 RedBlackNode<T> parent_node = (RedBlackNode<T>) deleteNode.getParentNode();
                 if (parent_node == null) {
                     root = null;
@@ -160,90 +147,84 @@ public class RedBlackTree<T> extends BinarySearchTree<T> {
 
                     nodeToUpdate = deleteNode;
                     // If deleting node is a leaf and black then mark it as double black
-                    if (nodeToUpdate.getColour()) {
+                    if (nodeToUpdate.isBlack()) {
                         nodeToUpdate.setDoubleBlack(true);
                     }
                 }
-            } else {
+            } else { // predecessor exist
                 swapWithPredecessor(deleteNode, predecessor);
-                nodeToUpdate = (RedBlackNode<T>) predecessor.getParentNode();
-                if (predecessor.getColour() && predecessor.getRightNode() == null && predecessor.getLeftNode() == null) {
+                if (predecessor.isBlack() && predecessor.getRightNode() == null && predecessor.getLeftNode() == null) {
                     handleDoubleBlack(predecessor);
                 }
+                nodeToUpdate = (RedBlackNode<T>) deleteNode.getLeftNode();
             }
-        } else {
+        } else { // successor exist
             swapWithSuccessor(deleteNode, successor);
-            nodeToUpdate = (RedBlackNode<T>) successor.getParentNode();
-            if (successor.getColour() && successor.getLeftNode() == null && successor.getRightNode() == null) {
+            if (successor.isBlack() && successor.getLeftNode() == null && successor.getRightNode() == null) {
                 handleDoubleBlack(successor);
+            } else {
+                nodeToUpdate = (RedBlackNode<T>) deleteNode.getRightNode();
             }
         }
 
         if (nodeToUpdate != null) {
-            adjustAfterDelete(nodeToUpdate);
+            adjustTreeAfterDelete(nodeToUpdate);
         }
     }
 
-    public void adjustAfterDelete(RedBlackNode<T> node) {
+    private void adjustTreeAfterDelete(RedBlackNode<T> node) {
         if (node.isDoubleBlack()) {
             handleDoubleBlack(node);
-        } else if (node.getColour()) {
+        } else if (node.getParentNode() != null) { // perform balancing on Tree if a node is not a root
             deleteCase1(node);
         }
     }
 
-    public void handleDoubleBlack(RedBlackNode<T> node) {
+    private void handleDoubleBlack(RedBlackNode<T> node) { // when a black node is deleted and replaced by black child
         RedBlackNode<T> sibling = getSibling(node);
         RedBlackNode<T> siblingLeft = (RedBlackNode<T>) sibling.getLeftNode();
         RedBlackNode<T> siblingRight = (RedBlackNode<T>) sibling.getRightNode();
         RedBlackNode<T> parent = (RedBlackNode<T>) node.getParentNode();
 
-        if (sibling.getColour()) {
+        if (sibling.isBlack()) {
             if (node.getKey() > parent.getKey()) {
-                if (siblingLeft != null && !siblingLeft.getColour()) {
+                if (siblingLeft != null && !siblingLeft.isBlack()) {
                     rightRotation(parent);
+                    siblingLeft.setColour(parent.isBlack());
                 } else if (siblingRight != null) {
                     leftRotation(sibling);
                     rightRotation(parent);
                     parent.setColour(true);
+                } else if (parent == root) {
+                    sibling.setColour(false);
                 }
-            } else if (node.getKey() < parent.getKey()) {
-                if (siblingRight != null && !siblingRight.getColour()) {
+            } else {
+                if (siblingRight != null && !siblingRight.isBlack()) {
                     leftRotation(parent);
+                    siblingRight.setColour(parent.isBlack());
                 } else if (siblingLeft != null) {
                     rightRotation(sibling);
                     leftRotation(parent);
                     parent.setColour(true);
-                }
-            } else {
-                if (parent.getLeftNode() == null) {
-                    leftRotation(parent);
-                } else if (parent.getRightNode() == null) {
-                    rightRotation(parent);
+                } else if (parent == root) {
+                    sibling.setColour(false);
                 }
             }
-        } else if (!sibling.getColour()) {
+        } else { // when sibling is red
             if (node.getKey() < parent.getKey()) {
                 leftRotation(parent);
             } else {
                 rightRotation(parent);
             }
             parent.setColour(false);
-            sibling.setColour(true);
             handleDoubleBlack(node);
         }
     }
 
-    public void deleteCase1(RedBlackNode<T> node) {
-        if (node.getParentNode() != null) {
-            deleteCase2(node);
-        }
-    }
-
-    public void deleteCase2(RedBlackNode<T> node) {
+    private void deleteCase1(RedBlackNode<T> node) { // Sibling is red. In this case we reverse the colors of Parent and Sibling, and then rotate left at Parent, turning Sibling into node's grandparent.
         RedBlackNode<T> sibling = getSibling(node);
         RedBlackNode<T> parent = (RedBlackNode<T>) node.getParentNode();
-        if (!sibling.getColour()) {
+        if (!sibling.isBlack()) {
             parent.setColour(false);
             sibling.setColour(true);
             if (node.getKey() < parent.getKey()) {
@@ -253,49 +234,54 @@ public class RedBlackTree<T> extends BinarySearchTree<T> {
             }
             node = parent;
         }
-        deleteCase3(node);
+        deleteCase2(node);
     }
 
-    public void deleteCase3(RedBlackNode<T> node) {
+    private void deleteCase2(RedBlackNode<T> node) {
         RedBlackNode<T> sibling = getSibling(node);
         RedBlackNode<T> siblingLeft = (RedBlackNode<T>) sibling.getLeftNode();
         RedBlackNode<T> siblingRight = (RedBlackNode<T>) sibling.getRightNode();
         RedBlackNode<T> parent = (RedBlackNode<T>) node.getParentNode();
-        if (parent.getColour() && sibling.getColour()) {
-            if (siblingLeft != null && siblingRight != null && siblingLeft.getColour() && siblingRight.getColour()) {
+
+        if (parent.isBlack() && sibling.isBlack()) { // P, S, and S's children are black. In this case, we simply repaint S red.
+            if (siblingLeft != null && siblingRight != null && siblingLeft.isBlack() && siblingRight.isBlack()) {
                 sibling.setColour(false);
-                deleteCase1(parent);
+                if (node.getParentNode() != null) {
+                    deleteCase1(node);
+                }
+            } else if (node.getLeftNode() == null && node.getRightNode() == null) {
+                node.setColour(true);
             }
-        } else if (!parent.getColour() && sibling.getColour()) {
-            if (siblingLeft != null && siblingRight != null && siblingLeft.getColour() && siblingRight.getColour()) {
-                if (!node.getColour()) {
+        } else if (!parent.isBlack() && sibling.isBlack()) { // S and S's children are black, but P is red. In this case, we simply exchange the colors of S and P.
+            if (siblingLeft != null && siblingRight != null && siblingLeft.isBlack() && siblingRight.isBlack()) {
+                if (!node.isBlack()) {
                     sibling.setColour(false);
                     parent.setColour(true);
                 }
             }
         } else {
-            deleteCase4(node);
+            deleteCase3(node);
         }
     }
 
-    public void deleteCase4(RedBlackNode<T> node) {
+    private void deleteCase3(RedBlackNode<T> node) {
         RedBlackNode<T> sibling = getSibling(node);
         RedBlackNode<T> siblingLeft = (RedBlackNode<T>) sibling.getLeftNode();
         RedBlackNode<T> siblingRight = (RedBlackNode<T>) sibling.getRightNode();
         RedBlackNode<T> parent = (RedBlackNode<T>) node.getParentNode();
 
-        if (sibling.getColour()) {
-            if (node.getKey() < parent.getKey() && siblingRight.getColour() && !siblingLeft.getColour()) {
+        if (sibling.isBlack()) { // S is black, S's left child is red, S's right child is black, and N is the left child of its parent. In this case we rotate right at S, so that S's left child becomes S's parent and N's new sibling.
+            if (node.getKey() < parent.getKey() && siblingRight.isBlack() && !siblingLeft.isBlack()) {
                 sibling.setColour(false);
                 siblingLeft.setColour(true);
                 rightRotation(sibling);
-            }  else if (node.getKey() > parent.getKey() && siblingLeft.getColour() && !siblingRight.getColour()) {
+            }  else if (node.getKey() < parent.getKey() && siblingLeft.isBlack() && !siblingRight.isBlack()) { // S is black, S's right child is red, and N is the left child of its parent P. In this case we rotate left at P, so that S becomes the parent of P and S's right child.
                 sibling.setColour(false);
                 siblingRight.setColour(true);
                 leftRotation(sibling);
             }
         } else {
-            sibling.setColour(parent.getColour());
+            sibling.setColour(parent.isBlack());
             parent.setColour(true);
 
             if (node.getKey() < parent.getKey()) {

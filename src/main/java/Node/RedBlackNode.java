@@ -19,7 +19,7 @@ public class RedBlackNode<T> extends BinaryNode<T> {
         this.isBlack = isBlack;
     }
 
-    public boolean getColour() { return isBlack; }
+    public boolean isBlack() { return isBlack; }
 
     public boolean isDoubleBlack() { return isDoubleBlack; }
 
