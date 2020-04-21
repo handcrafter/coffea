@@ -2,6 +2,9 @@ package Tree;
 
 import Node.BinaryNode;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 
 public class BinarySearchTree<T> extends BinaryTree<T> {
     BinaryNode<T> root;
@@ -104,7 +107,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
                 linkNodes(parent, successor.getRightNode(), 'R');
             }
         } else {
-            if (successor.getKey() < parent.getKey()) {
+            if (successor.getKey() < parent.getKey() || successor == parent.getLeftNode()) {
                 successor.getParentNode().setLeftNode(null);
             } else {
                 successor.getParentNode().setRightNode(null);
@@ -124,7 +127,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
                 linkNodes(parent, predecessor.getLeftNode(), 'R');
             }
         } else {
-            if (predecessor.getKey() < parent.getKey()) {
+            if (predecessor.getKey() < parent.getKey() || predecessor == parent.getLeftNode()) {
                 parent.setLeftNode(null);
             } else {
                 parent.setRightNode(null);
@@ -199,7 +202,8 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
     }
 
     public void printInorder() {
-        if (current == null) return;
+        if (root == null) return;
+        current = root;
         if (current.getLeftNode() != null) {
             moveToLeftNode();
             printInorder();
@@ -210,6 +214,19 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
             moveToRightNode();
             printInorder();
             moveToParentNode();
+        }
+    }
+
+    @Override
+    public void printBFS() {
+        assert root == null : "current must not be null";
+        Queue<BinaryNode<T>> queue = new LinkedList<BinaryNode<T>>() ;
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            BinaryNode<T> node = queue.remove();
+            node.print();
+            if (node.getLeftNode() != null) queue.add(node.getLeftNode());
+            if (node.getRightNode() != null) queue.add(node.getRightNode());
         }
     }
 }
